@@ -1,0 +1,2001 @@
+// SHARD: PIP AND THE EMERALD HEART
+// A / D: run. W: jump (hold for higher; jump at a wall to kick off it).
+// Space: dash, aimed with W A S D. Left click: swing (the yeti at the end needs it). Embers give the dash back. R: restart the level.
+
+var LEVELS = [
+    {"name": "1. THE MEADOW", "x": 0, "y": 0, "sx": 2, "sy": 13, "sky": 12},
+    {"name": "2. WINDY RIDGE", "x": 48, "y": 0, "sx": 2, "sy": 13, "sky": 12},
+    {"name": "3. SPRING WOODS", "x": 0, "y": 16, "sx": 2, "sy": 13, "sky": 9},
+    {"name": "4. FROZEN CAVES", "x": 48, "y": 16, "sx": 2, "sy": 12, "sky": 1},
+    {"name": "5. ICE FALLS", "x": 0, "y": 32, "sx": 2, "sy": 13, "sky": 1},
+    {"name": "6. CRYSTAL HOLLOW", "x": 48, "y": 32, "sx": 2, "sy": 11, "sky": 2},
+    {"name": "7. THE GLACIER", "x": 0, "y": 48, "sx": 2, "sy": 13, "sky": 1},
+    {"name": "8. THE SUMMIT", "x": 48, "y": 48, "sx": 1, "sy": 13, "sky": 13},
+    {"name": "9. THE YETI", "x": 96, "y": 0, "sx": 3, "sy": 13, "sky": 1, "w": 32, "boss": 1}
+]
+var STORY = [
+    ["LONG AGO THE EMERALD HEART KEPT THE MOUNTAIN GREEN AND WARM.",
+     "THE VALLEY FOLK SAID IT BEAT ONCE A YEAR. AND EVERY TIME IT DID. SPRING CAME.",
+     "BUT THIS YEAR SPRING NEVER CAME. THE RIVERS FROZE. THE FIELDS WENT GREY.",
+     "BRAM: PIP! THE HEART HAS CRACKED. I SAW THE PIECES FLY UP THE MOUNTAIN.",
+     "BRAM: NINE GREEN LIGHTS. LIKE SHOOTING STARS GOING THE WRONG WAY.",
+     "BRAM: MY KNEES ARE TOO OLD FOR CLIMBING. BUT YOURS ARE NOT.",
+     "BRAM: TAKE MY RED SCARF. IT WILL KEEP YOU WARM. NOW GO!",
+     "A AND D TO RUN. W TO JUMP. HOLD IT TO JUMP HIGHER."],
+    ["THE FIRST SHARD IS WARM IN PIPS HANDS. EIGHT MORE TO GO.",
+     "ON THE RIDGE THE WIND HOWLS. THE GAPS ARE FAR TOO WIDE TO JUMP.",
+     "BRAM (FAR BELOW): USE THE SCARF! IT REMEMBERS THE HEART. IT WILL CARRY YOU!",
+     "PRESS Q TO DASH. AIM WITH W A S D.",
+     "ONE DASH IN THE AIR. LAND OR TOUCH AN EMBER TO GET IT BACK."],
+    ["THE WOODS ARE QUIET. TOO QUIET. EVEN THE BIRDS HAVE GONE.",
+     "SOMEONE HAS LEFT RED SPRINGS ALL OVER THE PATH. WHO WOULD DO THAT?",
+     "RED SPRINGS THROW YOU HIGH. JUMP AT A WALL IN THE AIR TO KICK OFF IT.",
+     "SANDY BLOCKS CRUMBLE WHEN YOU STAND ON THEM. DO NOT WAIT AROUND."],
+    ["THE PATH DIVES UNDER THE ICE. IT IS SO COLD THAT PIPS BREATH HANGS IN THE AIR.",
+     "A VOICE ECHOES IN THE DARK: WHO GOES THERE?",
+     "A SNOWY OWL DROPS DOWN. WREN: A CHILD? UP HERE? YOU MUST BE AFTER THE SHARDS.",
+     "WREN: FOUR OF THEM FELL DEEP INTO THE ICE. I WILL SHOW YOU THE WAY.",
+     "WREN: MIND THE CEILING. THE ICE HAS TEETH."],
+    ["WREN: THESE ARE THE ICE FALLS. THE FLOOR IS AS SLICK AS GLASS.",
+     "WREN: YOU WILL SLIDE. START RUNNING EARLY. STOP EARLY.",
+     "WREN: AND LISTEN FOR CRACKING ABOVE YOU.",
+     "WREN: ICICLES FALL WHEN SOMETHING WARM WALKS UNDER THEM.",
+     "PIP: SOMETHING WARM?",
+     "WREN: YOU. KEEP MOVING."],
+    ["WREN: THE CRYSTAL HOLLOW. THE HEARTS WARMTH STILL FLOATS HERE AS EMBERS.",
+     "WREN: THERE IS NO FLOOR HERE. ONLY SPIKES.",
+     "WREN: YOU WILL HAVE TO FLY FROM EMBER TO EMBER.",
+     "PIP: I CAN NOT FLY.",
+     "WREN: YOU CAN DASH. AND EVERY EMBER GIVES IT BACK. THAT IS CLOSE ENOUGH.",
+     "WREN: DO NOT LOOK DOWN."],
+    ["THE HOLLOW OPENS ONTO A GLACIER. FAR ABOVE. THE SUMMIT GLOWS GREEN.",
+     "WREN: PIP. I HAVE TO TELL YOU SOMETHING. THE HEART DID NOT CRACK BY ITSELF.",
+     "WREN: THE MOUNTAIN WAS LONELY. EVERY YEAR THE VALLEY TOOK ITS SPRING...",
+     "WREN: ...AND NOBODY EVER CLIMBED UP TO SAY THANK YOU.",
+     "WREN: SO IT BROKE ITS OWN HEART...",
+     "WREN: ...AND HID THE PIECES WHERE ONLY SOMEONE WHO CARED WOULD GO.",
+     "PIP: THEN I WILL GO ALL THE WAY UP. AND I WILL SAY IT.",
+     "WREN: THEN HURRY. THE GLACIER IS CRACKING."],
+    ["THE SUMMIT. THE WIND IS LOUD AND THE SNOW IS DEEP. ANOTHER SHARD SHINES ABOVE.",
+     "WREN: I CAN NOT FLY IN THIS WIND. FROM HERE YOU GO ALONE.",
+     "BRAM (VERY FAR BELOW): GO ON. PIP!",
+     "ONE MORE CLIMB."],
+    ["PIP REACHES THE TOP. THE LAST SHARD SHOULD BE HERE. BUT THE SNOW IS EMPTY.",
+     "THEN THE FOG MOVES. TWO RED EYES OPEN IN THE WHITE.",
+     "A YETI AS BIG AS A HOUSE. AND IN ITS FOREHEAD... THE LAST SHARD. GLOWING.",
+     "WREN (FAR AWAY): PIP! THE SHARD HAS MADE IT WILD!",
+     "WREN: FREE THE SHARD AND YOU FREE THE YETI!",
+     "WHEN IT FALLS OR CRASHES INTO A WALL IT IS DIZZY. THAT IS WHEN YOU STRIKE.",
+     "LEFT CLICK TO SWING AT THE SHARD. JUMP OVER THE SHOCKWAVES."]
+]
+var ENDING = [
+    "THE YETI BLINKS. ITS EYES ARE GENTLE NOW. IT LOOKS CONFUSED. AND VERY FLUFFY.",
+    "THE NINE SHARDS CLICK TOGETHER IN PIPS HANDS. THE HEART BEATS ONCE.",
+    "PIP: THANK YOU. MOUNTAIN. FOR EVERY SPRING.",
+    "THE HEART BEATS AGAIN. LOUDER. THE SNOW AROUND PIP MELTS INTO WATER.",
+    "WARMTH ROLLS DOWN THE SLOPES. THE GLACIER SIGHS. THE RIVERS START TO RUN.",
+    "FAR BELOW. BRAM FEELS THE SUN ON HIS FACE. AND LAUGHS.",
+    "WREN: YOU DID IT. AND THE MOUNTAIN HEARD YOU.",
+    "FROM THAT YEAR ON. THE VALLEY CLIMBED THE MOUNTAIN EVERY SPRING. TO SAY THANK YOU.",
+    "THE END."
+]
+var RUN = [2, 3, 4, 3]
+var BERRIES = 19
+var W = 48
+var H = 16
+var SW = 228          // the screen is wide (widescreen): 228 x 128
+var OX = 50           // how far to shift things drawn for a 128-wide screen to centre them
+
+var mode = "title"
+var level = 0
+var lines = []
+var freeze = 0
+var levelTime = 0
+var px = 0
+var py = 0
+var vx = 0
+var vy = 0
+var facing = 1
+var grounded = false
+var wall = 0
+var coyote = 0
+var buffer = 0
+var canDash = true
+var dashTime = 0
+var wallLock = 0
+var lastJump = -1
+var steps = 0
+var dead = 0
+var won = 0
+var shards = 0
+var berries = 0
+var deaths = 0
+var startTime = 0
+var finishTime = 0
+var broken = []
+var crystals = []
+var springs = []
+var icicles = []
+var scarf = []
+var snow = []
+
+func init() {
+    widescreen(true)
+    cartdata("pip")
+    loadSettings()
+    startMusic()
+    var i = 0
+    while i < 5 {
+        push(scarf, {"x": 0, "y": 0})
+        i += 1
+    }
+    i = 0
+    while i < 40 {
+        push(snow, {"x": rnd(228), "y": rnd(128), "s": 0.3 + rnd(0.7)})
+        i += 1
+    }
+}
+
+// ---------- the map ----------
+
+func tileAt(x, y) {
+    var tx = flr(x / 8)
+    var ty = flr(y / 8)
+    if tx < 0 or tx >= W { return 64 }
+    if ty < 0 or ty >= H { return 0 }
+    var L = LEVELS[level]
+    return mget(L["x"] + tx, L["y"] + ty)
+}
+func flagAt(x, y, f) { return fget(tileAt(x, y), f) }
+func solidAt(x, y) { return fget(tileAt(x, y), 0) }
+func setTile(tx, ty, n) {
+    var L = LEVELS[level]
+    mset(L["x"] + tx, L["y"] + ty, n)
+}
+
+// Pip's body is a box 6 wide and 12 tall, from (px, py)
+func hitsSolid(x, y) {
+    return solidAt(x, y) or solidAt(x + 5, y) or solidAt(x, y + 6) or solidAt(x + 5, y + 6) or solidAt(x, y + 11) or solidAt(x + 5, y + 11)
+}
+// a tile with this flag that Pip touches (a little inside the box, so spikes are fair), or none
+func touched(f) {
+    for c in [[1, 2], [4, 2], [1, 10], [4, 10], [2, 6]] {
+        var x = px + c[0]
+        var y = py + c[1]
+        if flagAt(x, y, f) { return {"x": flr(x / 8), "y": flr(y / 8)} }
+    }
+    return none
+}
+
+// ---------- levels ----------
+
+func startGame() {
+    shards = 0
+    berries = 0
+    deaths = 0
+    level = 0
+    mode = "play"
+    startTime = t()
+    startLevel()
+    lines = copy(STORY[0])
+}
+
+// puts back the crumbled blocks, used crystals and springs of this level
+func resetTiles() {
+    for b in broken { setTile(b["x"], b["y"], 102) }
+    for c in crystals { setTile(c["x"], c["y"], 107) }
+    for s in springs { setTile(s["x"], s["y"], 100) }
+    for i in icicles { setTile(i["x"], i["y"], 144) }
+    broken = []
+    crystals = []
+    springs = []
+    icicles = []
+}
+
+func startLevel() {
+    resetTiles()
+    var L = LEVELS[level]
+    W = 48
+    if has(L, "w") { W = L["w"] }
+    if isBoss() { initBoss() }
+    // find the icicles that can fall
+    var ty = 0
+    while ty < H {
+        var tx = 0
+        while tx < W {
+            if mget(L["x"] + tx, L["y"] + ty) == 144 { push(icicles, {"x": tx, "y": ty, "state": 0, "t": 0, "fy": ty * 8, "v": 0}) }
+            tx += 1
+        }
+        ty += 1
+    }
+    px = L["sx"] * 8 + 1
+    py = L["sy"] * 8 - 12
+    vx = 0
+    vy = 0
+    facing = 1
+    canDash = true
+    dashTime = 0
+    wallLock = 0
+    dead = 0
+    levelTime = 0
+    for s in scarf {
+        s["x"] = px
+        s["y"] = py + 5
+    }
+}
+
+func nextLevel() {
+    resetTiles()
+    level += 1
+    if level >= len(LEVELS) {
+        level = len(LEVELS) - 1
+        mode = "epilogue"
+        page = 0
+        pageTime = 0
+        finishTime = t() - startTime
+        if dget(0) == 0 or finishTime < dget(0) { dset(0, finishTime) }
+        lines = copy(ENDING)
+        return
+    }
+    startLevel()
+    lines = copy(STORY[level])
+}
+
+func die() {
+    if dead > 0 { return }
+    if false {
+        // never die: bounce back out of pits instead
+        if py > H * 8 - 16 {
+            py = H * 8 - 24
+            vy = -6
+            canDash = true
+        }
+        return
+    }
+    burst(px + 3, py + 6, 24, 8, 1.6)
+    burst(px + 3, py + 6, 10, 7, 1)
+    shake(5)
+    play(4)
+    deaths += 1
+    dead = 30
+}
+
+// ---------- every frame ----------
+
+func update() {
+    if mode == "settings" {
+        updateSettings()
+        return
+    }
+    if mode == "title" {
+        if keyp("p") {
+            openSettings("title")
+            return
+        }
+        updateTitle()
+        return
+    }
+    // story boxes, one at a time; the game waits while one is open
+    if saying() { return }
+    if len(lines) > 0 {
+        say(remove(lines, 0))
+        freeze = 8
+        return
+    }
+    if mode == "epilogue" {
+        updateEpilogue()
+        return
+    }
+    if mode == "end" {
+        if freeze > 0 {
+            freeze -= 1
+            return
+        }
+        if btnp(4) or keyp("space") { mode = "title" }
+        return
+    }
+    if freeze > 0 {
+        freeze -= 1
+        return
+    }
+    if flash > 0 { flash -= 1 }
+    if hitstop > 0 {
+        hitstop -= 1
+        return
+    }
+    levelTime += 1
+    updateTiles()
+    if won > 0 {
+        won -= 1
+        if won == 0 { nextLevel() }
+        return
+    }
+    if dead > 0 {
+        dead -= 1
+        if dead == 0 { startLevel() }
+        return
+    }
+    if keyp("r") {
+        die()
+        return
+    }
+    if keyp("p") {
+        openSettings("play")
+        return
+    }
+    updatePip()
+    if isBoss() { updateBoss() }
+}
+
+func updateTiles() {
+    for b in broken {
+        if b["t"] > 0 {
+            b["t"] -= 1
+            if b["t"] == 0 {
+                setTile(b["x"], b["y"], 0)
+                burst(b["x"] * 8 + 4, b["y"] * 8 + 4, 8, 9, 0.8)
+                b["back"] = 140
+            }
+        } else if b["back"] > 0 {
+            b["back"] -= 1
+            if b["back"] == 0 {
+                // grow back, unless Pip is standing in the way
+                if abs(b["x"] * 8 + 4 - (px + 3)) < 8 and abs(b["y"] * 8 + 4 - (py + 6)) < 11 {
+                    b["back"] = 10
+                } else {
+                    setTile(b["x"], b["y"], 102)
+                }
+            }
+        }
+    }
+    for c in crystals {
+        if c["t"] > 0 {
+            c["t"] -= 1
+            if c["t"] == 0 {
+                setTile(c["x"], c["y"], 107)
+                burst(c["x"] * 8 + 4, c["y"] * 8 + 3, 6, 9, 0.5)
+            }
+        }
+    }
+    updateIcicles()
+    for s in springs {
+        if s["t"] > 0 {
+            s["t"] -= 1
+            if s["t"] == 0 { setTile(s["x"], s["y"], 100) }
+        }
+    }
+}
+
+// icicles: shake when Pip passes under, then fall; they shatter on the ground
+func updateIcicles() {
+    for i in icicles {
+        var ix = i["x"] * 8
+        if i["state"] == 0 and dead == 0 and px + 6 > ix - 6 and px < ix + 14 and py > i["y"] * 8 {
+            i["state"] = 1
+            i["t"] = 14
+        } else if i["state"] == 1 {
+            i["t"] -= 1
+            if i["t"] == 0 {
+                i["state"] = 2
+                setTile(i["x"], i["y"], 0)
+            }
+        } else if i["state"] == 2 {
+            i["v"] = min(i["v"] + 0.3, 5)
+            i["fy"] += i["v"]
+            if dead == 0 and abs(ix + 4 - (px + 3)) < 6 and i["fy"] + 7 > py and i["fy"] < py + 12 { die() }
+            if solidAt(ix + 4, i["fy"] + 8) or i["fy"] > H * 8 {
+                i["state"] = 3
+                burst(ix + 4, i["fy"] + 6, 10, 7, 1)
+                burst(ix + 4, i["fy"] + 6, 6, 12, 0.8)
+                play(4)
+            }
+        }
+    }
+}
+
+func drawIcicles() {
+    for i in icicles {
+        if i["state"] == 1 { spr(144, i["x"] * 8 + rnd(2) - 1, i["y"] * 8) }
+        if i["state"] == 2 { spr(144, i["x"] * 8, i["fy"]) }
+    }
+}
+
+func crumble(tx, ty) {
+    if tileAt(tx * 8, ty * 8) != 102 { return }
+    setTile(tx, ty, 103)
+    push(broken, {"x": tx, "y": ty, "t": 18, "back": 0})
+}
+
+func onLedge() {
+    var feet = py + 12
+    if feet - flr(feet / 8) * 8 > 1 { return false }
+    return flagAt(px, feet, 6) or flagAt(px + 5, feet, 6)
+}
+
+func updatePip() {
+    var dx = 0
+    if btn(0) or held("left") { dx = -1 }
+    if btn(1) or held("right") { dx = 1 }
+    var jumpHeld = btn(4) or btn(2) or held("jump")
+    var dashPressed = btnp(5) or hit("dash")
+    if btnp(4) or btnp(2) or hit("jump") { buffer = 6 }
+    // left click: swing
+    if atkCool > 0 { atkCool -= 1 }
+    if atkTime > 0 { atkTime -= 1 }
+    if hit("swing") and atkCool == 0 {
+        atkTime = 8
+        atkCool = 14
+        play(2)
+        burst(px + 3 + facing * 9, py + 6, 4, 7, 0.8)
+        if isBoss() { strike() }
+    }
+
+    grounded = vy >= 0 and (solidAt(px, py + 12) or solidAt(px + 5, py + 12) or onLedge())
+    if grounded {
+        coyote = 6
+        if dashTime == 0 { canDash = true }
+    }
+    if grounded {
+        if flagAt(px + 1, py + 12, 7) { crumble(flr((px + 1) / 8), flr((py + 12) / 8)) }
+        if flagAt(px + 4, py + 12, 7) { crumble(flr((px + 4) / 8), flr((py + 12) / 8)) }
+    } else if coyote > 0 {
+        coyote -= 1
+    }
+    wall = 0
+    if not grounded {
+        if hitsSolid(px + 1, py) {
+            wall = 1
+        } else if hitsSolid(px - 1, py) {
+            wall = -1
+        }
+    }
+
+    // jumping: off the ground (a moment after leaving it still counts), or off a wall
+    if buffer > 0 and dashTime == 0 {
+        if coyote > 0 {
+            vy = -3.2
+            buffer = 0
+            coyote = 0
+            play(0)
+            burst(px + 3, py + 12, 5, 6, 0.6)
+        } else if wall != 0 {
+            vy = -3.0
+            vx = -wall * 2.2
+            facing = -wall
+            wallLock = 10
+            buffer = 0
+            play(0)
+            burst(px + 3 + wall * 3, py + 8, 5, 6, 0.6)
+        }
+    }
+    if buffer > 0 { buffer -= 1 }
+
+    // dashing
+    if dashPressed and canDash {
+        var ddx = dx
+        var ddy = 0
+        if btn(2) or held("jump") { ddy = -1 }
+        if btn(3) or held("down") { ddy = 1 }
+        if ddx == 0 and ddy == 0 { ddx = facing }
+        var speed = 3.4
+        if ddx != 0 and ddy != 0 { speed = 2.6 }
+        vx = ddx * speed
+        vy = ddy * speed
+        if ddx != 0 { facing = ddx }
+        dashTime = 9
+        canDash = false
+        wallLock = 0
+        shake(2)
+        play(1)
+        burst(px + 3, py + 6, 8, 9, 1)
+    }
+
+    if dashTime > 0 {
+        dashTime -= 1
+        if dashTime % 2 == 0 { burst(px + 3, py + 6, 2, pick([9, 10]), 0.3) }
+        if dashTime == 0 {
+            vx = vx * 0.5
+            vy = vy * 0.5
+        }
+    } else {
+        if dx != 0 and wallLock == 0 { facing = dx }
+        if wallLock > 0 {
+            wallLock -= 1
+        } else {
+            var grip = 0.18
+            if grounded { grip = 0.35 }
+            var under = tileAt(px + 3, py + 12)
+            if grounded and under >= 128 and under < 144 { grip = 0.035 }   // ice: slow to start, slow to stop
+            vx += (dx * 1.4 - vx) * grip
+        }
+        var g = 0.2
+        if abs(vy) < 0.6 and jumpHeld { g = 0.1 }
+        if vy < 0 and not jumpHeld { g = 0.4 }
+        vy += g
+        if wall != 0 and dx == wall and vy > 0.8 { vy = 0.8 }
+        vy = min(vy, 3.6)
+    }
+
+    if moveX(vx) { vx = 0 }
+    moveY(vy)
+
+    if grounded and abs(vx) > 0.3 { steps += 1 } else { steps = 0 }
+
+    // what Pip touches
+    if touched(1) != none or py > H * 8 {
+        die()
+        return
+    }
+    var s = touched(4)
+    if s != none and vy >= 0 {
+        vy = -5.4
+        dashTime = 0
+        canDash = true
+        coyote = 0
+        setTile(s["x"], s["y"], 101)
+        push(springs, {"x": s["x"], "y": s["y"], "t": 10})
+        play(0)
+        burst(s["x"] * 8 + 4, s["y"] * 8 + 4, 6, 8, 0.8)
+        shake(1)
+    }
+    var c = touched(5)
+    if c != none and not canDash {
+        canDash = true
+        setTile(c["x"], c["y"], 108)
+        push(crystals, {"x": c["x"], "y": c["y"], "t": 150})
+        play(3)
+        burst(c["x"] * 8 + 4, c["y"] * 8 + 3, 10, 10, 1)
+    }
+    var b = touched(2)
+    if b != none {
+        setTile(b["x"], b["y"], 0)
+        berries += 1
+        play(3)
+        burst(b["x"] * 8 + 4, b["y"] * 8 + 4, 10, 10, 1)
+    }
+    var gem = touched(3)
+    if gem != none {
+        setTile(gem["x"], gem["y"], 0)
+        shards += 1
+        play(5)
+        shake(3)
+        burst(gem["x"] * 8 + 4, gem["y"] * 8 + 4, 30, 11, 1.5)
+        burst(gem["x"] * 8 + 4, gem["y"] * 8 + 4, 15, 7, 1)
+        won = 60
+    }
+
+    // the scarf: each piece follows the one before, blowing back
+    var hx = px + 3 - facing * 2
+    var hy = py + 6
+    for p in scarf {
+        p["x"] += (hx - p["x"]) * 0.45
+        p["y"] += (hy - p["y"]) * 0.45
+        hx = p["x"] - facing * 1.2
+        hy = p["y"] + 0.4 + sin(t() * 9 + hx) * 0.3
+    }
+}
+
+func moveX(amount) {
+    var nx = px + amount
+    if not hitsSolid(nx, py) {
+        px = nx
+        return false
+    }
+    var s = sign(amount)
+    var guard = 0
+    while not hitsSolid(px + s, py) and guard < 8 {
+        px += s
+        guard += 1
+    }
+    return true
+}
+
+func moveY(amount) {
+    // ledges hold Pip only when coming down onto them (hold down to drop through)
+    if amount > 0 and not (btn(3) or held("down")) {
+        var feet = py + 12
+        var after = feet + amount
+        var top = flr(after / 8) * 8
+        if feet <= top and after >= top and (flagAt(px, after, 6) or flagAt(px + 5, after, 6)) {
+            py = top - 12
+            vy = 0
+            return
+        }
+    }
+    var ny = py + amount
+    if not hitsSolid(px, ny) {
+        py = ny
+        return
+    }
+    var s = sign(amount)
+    var guard = 0
+    while not hitsSolid(px, py + s) and guard < 8 {
+        py += s
+        guard += 1
+    }
+    if s > 0 { py = flr((py + 13) / 8) * 8 - 12 }
+    vy = 0
+}
+
+// ---------- settings ----------
+
+var KEYS = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "space", "enter", "shift", "up", "down", "left", "right", "click"]
+var ACTIONS = [["LEFT", "left"], ["RIGHT", "right"], ["JUMP", "jump"], ["DOWN", "down"], ["DASH", "dash"], ["SWING", "swing"]]
+var binds = {"left": "a", "right": "d", "jump": "w", "down": "s", "dash": "q", "swing": "click"}
+var musicOn = true
+var sfxOn = true
+var menu = 0
+var waiting = false
+var backTo = "title"
+
+// cartdata slots: 0 best time, 1-6 keys, 7 music off, 8 sound off
+func loadSettings() {
+    var i = 0
+    while i < len(ACTIONS) {
+        var v = dget(i + 1)
+        if v > 0 and v <= len(KEYS) { binds[ACTIONS[i][1]] = KEYS[v - 1] }
+        i += 1
+    }
+    musicOn = dget(7) == 0
+    sfxOn = dget(8) == 0
+}
+
+func saveSettings() {
+    var i = 0
+    while i < len(ACTIONS) {
+        dset(i + 1, indexOf(KEYS, binds[ACTIONS[i][1]]) + 1)
+        i += 1
+    }
+    dset(7, musicOn ? 0 : 1)
+    dset(8, sfxOn ? 0 : 1)
+}
+
+func play(n) {
+    if sfxOn { sfx(n) }
+}
+
+func startMusic() {
+    if musicOn { music(0) } else { music(-1) }
+}
+
+// the player's keys (a key name, or "click" for the left mouse button)
+func held(a) {
+    var k = binds[a]
+    if k == "click" { return mousedown() }
+    return key(k)
+}
+func hit(a) {
+    var k = binds[a]
+    if k == "click" { return click() }
+    return keyp(k)
+}
+
+func openSettings(from) {
+    backTo = from
+    mode = "settings"
+    menu = 0
+    waiting = false
+}
+
+func updateSettings() {
+    if waiting {
+        // the next key (or click) pressed becomes the new key
+        for k in KEYS {
+            if k == "click" {
+                if click() {
+                    bindTo(k)
+                    return
+                }
+            } else if keyp(k) {
+                bindTo(k)
+                return
+            }
+        }
+        return
+    }
+    if btnp(2) { menu = (menu + 8) % 9 }
+    if btnp(3) { menu = (menu + 1) % 9 }
+    var my = mousey()
+    var onRow = mousex() - OX > 8 and mousex() - OX < 120 and my >= 22 and my < 22 + 9 * 10
+    if onRow and click() {
+        menu = flr((my - 22) / 10)
+        choose()
+        return
+    }
+    if keyp("enter") or btnp(4) { choose() }
+    if keyp("p") {
+        mode = backTo
+        freeze = 6
+    }
+}
+
+func choose() {
+    if menu < 6 {
+        waiting = true
+    } else if menu == 6 {
+        musicOn = not musicOn
+        startMusic()
+        saveSettings()
+    } else if menu == 7 {
+        sfxOn = not sfxOn
+        saveSettings()
+        play(3)
+    } else {
+        mode = backTo
+        freeze = 6
+    }
+}
+
+func bindTo(k) {
+    binds[ACTIONS[menu][1]] = k
+    waiting = false
+    saveSettings()
+    play(3)
+}
+
+func drawSettings() {
+    cls(1)
+    menuCard("SETTINGS")
+    var i = 0
+    while i < 9 {
+        var y = 24 + i * 9
+        if i >= 6 { y += 6 }
+        if i == 8 { y += 4 }
+        var label = "BACK"
+        var value = ""
+        if i < 6 {
+            label = ACTIONS[i][0]
+            value = upper(binds[ACTIONS[i][1]])
+            if waiting and menu == i { value = "PRESS..." }
+        } else if i == 6 {
+            label = "MUSIC"
+            value = musicOn ? "ON" : "OFF"
+        } else if i == 7 {
+            label = "SOUND"
+            value = sfxOn ? "ON" : "OFF"
+        }
+        menuRow(i == menu, label, value, y)
+        i += 1
+    }
+    print("ENTER / CLICK    P: BACK", 18, 116, 5)
+}
+
+// ---------- the epilogue: storybook pages in a gold frame ----------
+
+var EPILOGUE = [
+    "AND LATER...",
+    "SPRING CAME BACK. THE FIELDS WENT GREEN AND THE RIVERS RAN LOUD.",
+    "PIP AND HIS FRIEND BRAE SPENT THE WARM DAYS BY THE WATERFALL.",
+    "BRAM TOLD THE STORY TO ANYONE WHO WOULD SIT STILL LONG ENOUGH.",
+    "THE YETI MOVED IN WITH WREN. TERRIBLE COOK. GREAT HUGGER.",
+    "UNTIL ONE EVENING... PIP AND BRAE LOOKED UP AT THE MOUNTAIN.",
+    "SOMETHING WAS LOOKING BACK.",
+    "THE END?"
+]
+var page = 0
+var pageTime = 0
+
+// splits text into lines of at most n letters
+func wrap(text, n) {
+    var out = []
+    var line = ""
+    for word in split(text, " ") {
+        if len(line) > 0 and len(line) + 1 + len(word) > n {
+            push(out, line)
+            line = word
+        } else if len(line) > 0 {
+            line = line + " " + word
+        } else {
+            line = word
+        }
+    }
+    if len(line) > 0 { push(out, line) }
+    return out
+}
+
+func updateEpilogue() {
+    pageTime += 1
+    var full = len(EPILOGUE[page])
+    var next = btnp(4) or btnp(5) or keyp("enter") or hit("jump") or hit("dash") or click()
+    if pageTime > 10 and next {
+        if pageTime * 0.7 < full {
+            pageTime = flr(full / 0.7) + 1
+        } else {
+            page += 1
+            pageTime = 0
+            play(3)
+            if page >= len(EPILOGUE) {
+                mode = "end"
+                freeze = 10
+            }
+        }
+    }
+}
+
+func drawFrame() {
+    rectfill(4, 4, 123, 123, 1)
+    rect(4, 4, 123, 123, 9)
+    rect(6, 6, 121, 121, 10)
+    rect(8, 8, 119, 119, 4)
+    // vines of little dots along the edges
+    var i = 14
+    while i < 114 {
+        var w = sin(i * 0.3 + t()) * 1.5
+        pset(i, 11 + w, 3)
+        pset(i, 116 + w, 3)
+        pset(11 + w, i, 3)
+        pset(116 + w, i, 3)
+        if i % 12 == 2 {
+            pset(i, 11 + w, 11)
+            pset(i, 116 + w, 11)
+            pset(11 + w, i, 11)
+            pset(116 + w, i, 11)
+        }
+        i += 3
+    }
+    // shards in the corners, gently bobbing
+    var b = sin(t() * 2) * 1
+    spr(109, 2, 2 + b)
+    spr(109, 118, 2 - b)
+    spr(109, 2, 118 - b)
+    spr(109, 118, 118 + b)
+}
+
+func drawEpilogue() {
+    cls(0)
+    var last = len(EPILOGUE) - 1
+    drawFrame()
+    var text = EPILOGUE[page]
+    var shown = flr(pageTime * 0.7)
+    var rows = wrap(text, 24)
+    var y = 64 - len(rows) * 4
+    var count = 0
+    for r in rows {
+        var part = r
+        if count + len(r) > shown { part = slice(r, 0, max(0, shown - count)) }
+        if count < shown { print(part, 64 - len(r) * 2, y, page == 0 or page == last ? 10 : 7) }
+        count += len(r) + 1
+        y += 7
+    }
+}
+
+// a filled circle kept inside the picture frame
+func blob(cx, cy, r, c) {
+    var dy = -r
+    while dy <= r {
+        var y = cy + dy
+        if y >= 9 and y <= 118 {
+            var hw = sqrt(r * r - dy * dy)
+            line(max(9, cx - hw), y, min(118, cx + hw), y, c)
+        }
+        dy += 1
+    }
+}
+
+// Pip and Brae by the waterfall
+func drawWaterfall() {
+    rectfill(9, 9, 118, 118, 12)
+    circfill(30, 30, 8, 10)
+    blob(40, 96, 40, 3)
+    // cliff and the waterfall
+    rectfill(76, 16, 118, 78, 5)
+    rectfill(76, 16, 118, 18, 11)
+    var x = 84
+    while x <= 96 {
+        line(x, 18, x, 76, 12)
+        var y = (t() * 60 + x * 7) % 12
+        while y < 58 {
+            line(x, 18 + y, x, 21 + y, 7)
+            y += 12
+        }
+        x += 1
+    }
+    rectfill(66, 76, 118, 82, 12)
+    var f = 0
+    while f < 8 {
+        pset(82 + rnd(18), 75 + rnd(4), 7)
+        f += 1
+    }
+    // grass
+    rectfill(9, 80, 66, 118, 3)
+    rectfill(9, 80, 66, 81, 11)
+    rectfill(66, 82, 118, 118, 3)
+    var g = 10
+    while g < 118 {
+        var top = g < 66 ? 80 : 82
+        line(g, top, g + sin(t() * 2 + g) * 1.5, top - 3, 11)
+        if g % 9 == 0 { pset(g, top - 4, g % 2 == 0 ? 8 : 10) }
+        g += 3
+    }
+    // the two of them
+    spr(flr(t() * 2) % 2 * 2, 30, 64, 2, 2)
+    spr(38, 46, 64, 2, 2, true)
+}
+
+// they look up: the mountain, and something on top of it
+func drawMountain() {
+    var last = len(EPILOGUE) - 1
+    rectfill(9, 9, 118, 118, 2)
+    var s = 0
+    while s < 20 {
+        pset(12 + (s * 37) % 104, 12 + (s * 23) % 40, 7)
+        s += 1
+    }
+    var my = 50
+    while my <= 118 {
+        var half = (my - 50) * 0.9
+        line(max(9, 64 - half), my, min(118, 64 + half), my, my < 62 ? 7 : 5)
+        my += 1
+    }
+    // the figure on the peak, red eyes; bigger on the last page before the end
+    var big = page == last - 1
+    var fr = big ? 6 : 3
+    var fy = 50 - fr * 2 - 1
+    circfill(64, fy, fr, 0)
+    rectfill(64 - fr, fy, 64 + fr, fy + fr * 2, 0)
+    if flr(t() * 3) % 9 != 0 {
+        pset(62 - (big ? 1 : 0), fy, 8)
+        pset(66 + (big ? 1 : 0), fy, 8)
+    }
+    // Pip and Brae, from behind, looking up
+    spr(10, 18, 74, 2, 2)
+    spr(38, 94, 74, 2, 2, true)
+    // the last page fades to black
+    if big and pageTime > 60 {
+        var amount = min(1, (pageTime - 60) / 60)
+        var y = 9
+        while y < 119 {
+            if (y % 4) / 4 < amount { line(9, y, 118, y, 0) }
+            y += 1
+        }
+        if amount >= 1 { rectfill(9, 9, 118, 118, 0) }
+    }
+}
+
+// ---------- the yeti ----------
+
+var FLOOR = 104
+var bx = 0
+var by = 0
+var bvx = 0
+var bvy = 0
+var bhp = 0
+var bstate = "intro"
+var btimer = 0
+var bface = -1
+var bflash = 0
+var banger = 0
+var bstep = 0
+var hitstop = 0
+var flash = 0
+var atkTime = 0
+var atkCool = 0
+var balls = []
+var waves = []
+var rings = []
+var drops = []
+var fog = []
+var streaks = []
+var shardDrop = none
+
+// one item from a list, at random
+func pick(list) { return list[flr(rnd(len(list)))] }
+
+func isBoss() { return has(LEVELS[level], "boss") }
+
+func initBoss() {
+    bx = 112
+    by = FLOOR
+    bvx = 0
+    bvy = 0
+    bhp = 4
+    banger = 0
+    bstate = "intro"
+    btimer = 100
+    bface = -1
+    bflash = 0
+    balls = []
+    waves = []
+    rings = []
+    drops = []
+    shardDrop = none
+    if len(fog) == 0 {
+        var i = 0
+        while i < 10 {
+            push(fog, {"x": rnd(320), "y": 16 + rnd(100), "r": 10 + rnd(14), "s": 0.2 + rnd(0.5)})
+            i += 1
+        }
+        i = 0
+        while i < 34 {
+            push(streaks, {"x": rnd(228), "y": rnd(128), "s": 2 + rnd(3)})
+            i += 1
+        }
+    }
+}
+
+// where the shard in his head is: high up, or low and forward when he is dizzy
+func headX() {
+    if bstate == "stunned" { return bx + bface * 12 }
+    return bx + bface * 3
+}
+func headY() {
+    if bstate == "stunned" { return by - 22 }
+    return by - 46
+}
+
+func hitPip(x, y, r) {
+    return dead == 0 and x + r > px and x - r < px + 6 and y + r > py and y - r < py + 12
+}
+
+func dropIcicles(n) {
+    var i = 0
+    while i < n {
+        push(drops, {"x": 16 + rnd(224), "y": 8, "v": 0, "wait": 20 + i * 10})
+        i += 1
+    }
+}
+
+func pickAttack() {
+    var r = rnd(3)
+    if r < 1 {
+        bstate = "crouch"
+        btimer = 38 - banger * 4
+    } else if r < 2 {
+        bstate = "windup"
+        btimer = 38 - banger * 4
+    } else {
+        bstate = "rev"
+        bface = px + 3 < bx ? -1 : 1
+        btimer = 48 - banger * 5
+    }
+}
+
+func land() {
+    shake(10)
+    play(4)
+    flash = 2
+    push(waves, {"x": bx - 16, "d": -1, "life": 90})
+    push(waves, {"x": bx + 16, "d": 1, "life": 90})
+    push(rings, {"x": bx, "y": by, "r": 6})
+    burst(bx, by - 2, 25, 7, 2)
+    dropIcicles(1 + banger)
+    bstate = "stunned"
+    btimer = 160 - banger * 15
+}
+
+// Pip's swing: it only hurts the yeti when he is dizzy and the swing reaches the shard
+func strike() {
+    if bstate == "dying" or bstate == "dead" or bstate == "intro" { return }
+    var sx = px + 3 + facing * 10
+    var sy = py + 6
+    if abs(sx - headX()) < 20 and abs(sy - headY()) < 20 {
+        if bstate == "stunned" {
+            bhp -= 1
+            hitstop = 6
+            flash = 3
+            bflash = 12
+            shake(7)
+            play(5)
+            burst(headX(), headY(), 25, 11, 2)
+            burst(headX(), headY(), 15, 7, 1.5)
+            push(rings, {"x": headX(), "y": headY(), "r": 3})
+            banger = 0
+            if bhp <= 2 { banger = 1 }
+            if bhp <= 1 { banger = 2 }
+            if bhp <= 0 {
+                bstate = "dying"
+                btimer = 120
+            } else {
+                bstate = "hurt"
+                btimer = 30
+                bvx = facing * 3
+            }
+        } else {
+            burst(sx, sy, 6, 10, 1)
+            play(2)
+            vx = -facing * 2
+        }
+    }
+}
+
+func updateBoss() {
+    if bflash > 0 { bflash -= 1 }
+    for b in balls {
+        b["x"] += b["vx"]
+        b["y"] += b["vy"]
+        b["vy"] += 0.15
+        if hitPip(b["x"], b["y"], 4) { die() }
+        if b["y"] > FLOOR - 3 or b["x"] < 8 or b["x"] > 248 {
+            b["gone"] = true
+            burst(b["x"], b["y"], 12, 7, 1.2)
+            push(rings, {"x": b["x"], "y": b["y"], "r": 2})
+        }
+    }
+    balls = filter(balls, func(b) { return not has(b, "gone") })
+    for w in waves {
+        w["x"] += w["d"] * 1.8
+        w["life"] -= 1
+        if w["life"] % 3 == 0 { burst(w["x"], FLOOR - 2, 2, 7, 0.6) }
+        if abs(w["x"] - (px + 3)) < 5 and py + 12 > FLOOR - 7 { die() }
+    }
+    waves = filter(waves, func(w) { return w["life"] > 0 and w["x"] > 8 and w["x"] < 248 })
+    for r in rings { r["r"] += 2 }
+    rings = filter(rings, func(r) { return r["r"] < 40 })
+    for d in drops {
+        if d["wait"] > 0 {
+            d["wait"] -= 1
+        } else {
+            d["v"] = min(d["v"] + 0.35, 6)
+            d["y"] += d["v"]
+            if hitPip(d["x"], d["y"] + 4, 3) { die() }
+            if d["y"] > FLOOR - 8 {
+                d["gone"] = true
+                burst(d["x"], FLOOR - 2, 10, 12, 1)
+            }
+        }
+    }
+    drops = filter(drops, func(d) { return not has(d, "gone") })
+
+    if shardDrop != none {
+        shardDrop["vy"] = min(shardDrop["vy"] + 0.2, 3)
+        shardDrop["y"] = min(shardDrop["y"] + shardDrop["vy"], FLOOR - 8)
+        if hitPip(shardDrop["x"] + 4, shardDrop["y"] + 4, 6) {
+            shards += 1
+            play(5)
+            flash = 8
+            shake(6)
+            burst(shardDrop["x"] + 4, shardDrop["y"] + 4, 50, 11, 2)
+            burst(shardDrop["x"] + 4, shardDrop["y"] + 4, 30, 7, 1.5)
+            shardDrop = none
+            won = 90
+        }
+        return
+    }
+    if bstate == "dead" { return }
+
+    var target = px + 3
+    btimer -= 1
+    if bstate == "intro" {
+        if btimer == 60 {
+            shake(12)
+            play(4)
+            push(rings, {"x": headX(), "y": headY(), "r": 4})
+            push(rings, {"x": headX(), "y": headY(), "r": 14})
+        }
+        if btimer <= 0 {
+            bstate = "idle"
+            btimer = 75
+        }
+    } else if bstate == "idle" {
+        bface = target < bx ? -1 : 1
+        bx += bface * (0.4 + banger * 0.2)
+        bstep += 1
+        if btimer <= 0 { pickAttack() }
+    } else if bstate == "crouch" {
+        if btimer <= 0 {
+            bstate = "air"
+            bvy = -6
+            bvx = clamp((target - bx) / 40, -3, 3)
+            play(1)
+        }
+    } else if bstate == "air" {
+        bx += bvx
+        bvy += 0.3
+        by += bvy
+        if by >= FLOOR and bvy > 0 {
+            by = FLOOR
+            land()
+        }
+    } else if bstate == "windup" {
+        bface = target < bx ? -1 : 1
+        if btimer <= 0 {
+            var n = 1 + flr(banger / 2)
+            var i = 0
+            while i < n {
+                push(balls, {"x": bx + bface * 16, "y": by - 44, "vx": (target - bx) / 45 + (i - (n - 1) / 2) * 0.7, "vy": -3.2 - i * 0.3})
+                i += 1
+            }
+            play(2)
+            shake(2)
+            bstate = "idle"
+            btimer = 75 - banger * 8
+        }
+    } else if bstate == "rev" {
+        if btimer % 6 == 0 { burst(bx - bface * 10, by - 2, 3, 6, 0.8) }
+        if btimer <= 0 {
+            bstate = "charge"
+            bvx = bface * (2.2 + banger * 0.4)
+            play(1)
+        }
+    } else if bstate == "charge" {
+        bx += bvx
+        if btimer % 3 == 0 { burst(bx - bface * 12, by - 2, 2, 7, 0.6) }
+        if bx < 32 or bx > 224 {
+            bx = clamp(bx, 32, 224)
+            shake(9)
+            play(4)
+            flash = 2
+            push(rings, {"x": bx + bface * 18, "y": by - 24, "r": 4})
+            dropIcicles(1 + banger)
+            bstate = "stunned"
+            btimer = 170 - banger * 15
+        }
+    } else if bstate == "stunned" {
+        if btimer <= 0 {
+            bstate = "idle"
+            btimer = 40
+        }
+    } else if bstate == "hurt" {
+        bx += bvx
+        bvx *= 0.85
+        if btimer <= 0 {
+            bstate = "crouch"
+            btimer = 18
+        }
+    } else if bstate == "dying" {
+        if btimer % 5 == 0 {
+            burst(bx + rnd(40) - 20, by - rnd(50), 15, pick([7, 6, 12, 11]), 1.5)
+            shake(4)
+            play(4)
+        }
+        if btimer <= 0 {
+            bstate = "dead"
+            flash = 12
+            shake(12)
+            burst(bx, by - 30, 60, 7, 2.5)
+            burst(bx, by - 30, 40, 11, 2)
+            shardDrop = {"x": bx - 4, "y": by - 54, "vy": -3}
+        }
+    }
+    bx = clamp(bx, 30, 226)
+
+    // touching the yeti hurts, unless he is down
+    if bstate == "charge" or bstate == "air" {
+        if px + 6 > bx - 15 and px < bx + 15 and py + 12 > by - 40 and py < by { die() }
+    }
+}
+
+func drawYeti() {
+    if bstate == "dead" { return }
+    var sq = 0
+    if bstate == "crouch" { sq = 4 + rnd(2) }
+    if bstate == "stunned" { sq = 14 }
+    var sx = 0
+    if bstate == "crouch" or bstate == "rev" or bstate == "dying" { sx = rnd(3) - 1.5 }
+    var x = bx + sx
+    var y = by
+    var bob = 0
+    if bstate == "idle" { bob = abs(sin(bstep * 0.08)) * 2 }
+    if bflash > 0 and bflash % 4 < 2 {
+        pal(7, 8)
+        pal(6, 8)
+        pal(13, 2)
+    }
+    // big furry feet, stepping as he walks
+    var stride = sin(bstep * 0.15) * 2
+    if bstate == "charge" { stride = sin(t() * 25) * 3 }
+    drawFoot(x - 9, y - max(0, stride))
+    drawFoot(x + 9, y - max(0, -stride))
+    // body: outline, fur, shaded belly, tufts
+    var cy = y - 24 + sq * 0.6 - bob
+    circfill(x, cy, 19, 1)
+    circfill(x, cy, 18, 7)
+    circfill(x + bface * 4, cy + 4, 11, 6)
+    var i = 0
+    while i < 9 {
+        var a = i * 0.7 + 0.3
+        pset(x + cos(a) * 15, cy + sin(a) * 15, 6)
+        pset(x + cos(a + 0.4) * 10, cy + sin(a + 0.4) * 12, 13)
+        i += 1
+    }
+    // arms: swing when walking, up to throw, up when leaping
+    var armY = cy + 2 + sin(bstep * 0.15) * 3
+    if bstate == "windup" { armY = cy - 16 }
+    if bstate == "air" { armY = cy - 10 }
+    if bstate == "stunned" { armY = cy + 8 }
+    circfill(x - 20, armY, 8, 1)
+    circfill(x + 20, armY, 8, 1)
+    circfill(x - 20, armY, 7, 7)
+    circfill(x + 20, armY, 7, 7)
+    circfill(x - 21, armY + 4, 4, 6)
+    circfill(x + 21, armY + 4, 4, 6)
+    if bstate == "windup" {
+        circfill(x + bface * 20, armY - 9, 6, 1)
+        circfill(x + bface * 20, armY - 9, 5, 7)
+    }
+    // head and horns
+    var hx = headX() + sx
+    var hy = headY() - bob
+    if bstate == "crouch" { hy += sq }
+    circfill(hx, hy, 12, 1)
+    circfill(hx, hy, 11, 7)
+    line(hx - 9, hy - 6, hx - 14, hy - 14, 6)
+    line(hx - 8, hy - 7, hx - 13, hy - 15, 6)
+    line(hx + 9, hy - 6, hx + 14, hy - 14, 6)
+    line(hx + 8, hy - 7, hx + 13, hy - 15, 6)
+    // face
+    // face: a blue-grey muzzle under a fringe of fur
+    var fx = hx + bface * 2
+    circfill(fx, hy + 2, 7, 5)
+    circfill(fx, hy + 2, 6, 13)
+    circfill(fx, hy + 5, 4, 6)
+    var j = -6
+    while j <= 6 {
+        line(fx + j, hy - 6, fx + j + 1, hy - 2, 7)
+        j += 2
+    }
+    drawFace(fx, hy)
+    // the shard in his forehead, glowing
+    var glow = 3 + sin(t() * 6) * 1.5
+    if bstate == "stunned" { glow += 3 }
+    circ(hx, hy - 11, glow + 4, 3)
+    circ(hx, hy - 11, glow + 2, 11)
+    spr(109, hx - 4, hy - 15)
+    pal()
+    if bstate == "stunned" {
+        var s = 0
+        while s < 3 {
+            var a = t() * 4 + s * 2.1
+            rectfill(hx + cos(a) * 14, hy - 18 + sin(a) * 4, hx + cos(a) * 14 + 1, hy - 17 + sin(a) * 4, 10)
+            s += 1
+        }
+    }
+}
+
+// his face changes with what he is doing
+func drawFace(fx, hy) {
+    var s = bstate
+    rectfill(fx - 1, hy + 3, fx + 1, hy + 4, 1)
+    // eyes
+    if s == "stunned" {
+        line(fx - 4, hy - 1, fx - 2, hy + 1, 1)
+        line(fx - 4, hy + 1, fx - 2, hy - 1, 1)
+        line(fx + 2, hy - 1, fx + 4, hy + 1, 1)
+        line(fx + 2, hy + 1, fx + 4, hy - 1, 1)
+    } else if s == "hurt" or s == "dying" {
+        line(fx - 4, hy - 1, fx - 2, hy, 1)
+        line(fx - 4, hy + 1, fx - 2, hy, 1)
+        line(fx + 4, hy - 1, fx + 2, hy, 1)
+        line(fx + 4, hy + 1, fx + 2, hy, 1)
+    } else {
+        var r = 2
+        if s == "air" { r = 3 }
+        // glowing eyes (no dark circles round them)
+        var c = 8
+        if s == "charge" or s == "rev" { c = 10 }
+        var e = r - 1
+        if s == "windup" {
+            line(fx - bface * 3 - 2, hy, fx - bface * 3 + 2, hy, 1)
+            rectfill(fx + bface * 3 - e, hy - e + 1, fx + bface * 3 + e - 1, hy + e - 1, c)
+        } else {
+            rectfill(fx - 3 - e, hy - e + 1, fx - 3 + e - 1, hy + e - 1, c)
+            rectfill(fx + 3 - e + 1, hy - e + 1, fx + 3 + e, hy + e - 1, c)
+        }
+    }
+    // brows
+    if s == "crouch" or s == "rev" or s == "charge" or s == "intro" {
+        line(fx - 6, hy - 5, fx - 1, hy - 2, 1)
+        line(fx + 6, hy - 5, fx + 1, hy - 2, 1)
+    } else if s == "dying" or s == "hurt" {
+        line(fx - 6, hy - 2, fx - 1, hy - 4, 1)
+        line(fx + 6, hy - 2, fx + 1, hy - 4, 1)
+    } else if s == "windup" {
+        line(fx - bface * 6, hy - 3, fx - bface * 1, hy - 3, 1)
+        line(fx + bface * 1, hy - 3, fx + bface * 6, hy - 5, 1)
+    } else if s == "air" {
+        line(fx - 6, hy - 5, fx - 1, hy - 5, 1)
+        line(fx + 6, hy - 5, fx + 1, hy - 5, 1)
+    }
+    // mouth
+    if s == "intro" or s == "charge" or s == "rev" {
+        circfill(fx, hy + 7, 3, 1)
+        circfill(fx, hy + 8, 1, 8)
+        line(fx - 3, hy + 5, fx - 2, hy + 8, 7)
+        line(fx + 3, hy + 5, fx + 2, hy + 8, 7)
+    } else if s == "crouch" {
+        rectfill(fx - 4, hy + 6, fx + 4, hy + 8, 1)
+        line(fx - 3, hy + 7, fx + 3, hy + 7, 7)
+        pset(fx - 1, hy + 7, 1)
+        pset(fx + 1, hy + 7, 1)
+    } else if s == "air" {
+        circfill(fx, hy + 7, 2, 1)
+    } else if s == "windup" {
+        line(fx - bface * 3, hy + 7, fx + bface * 3, hy + 5, 1)
+        pset(fx + bface * 2, hy + 6, 7)
+    } else if s == "stunned" {
+        line(fx - 3, hy + 7, fx - 1, hy + 6, 1)
+        line(fx - 1, hy + 6, fx + 1, hy + 7, 1)
+        line(fx + 1, hy + 7, fx + 3, hy + 6, 1)
+        rectfill(fx + 1, hy + 7, fx + 2, hy + 9, 8)
+    } else if s == "hurt" or s == "dying" {
+        circfill(fx, hy + 7, 2, 1)
+        line(fx - 2, hy + 6, fx + 2, hy + 6, 7)
+        if s == "dying" {
+            pset(fx - 4, hy + 2 + (t() * 12) % 5, 12)
+            pset(fx + 4, hy + 2 + (t() * 12 + 2) % 5, 12)
+        }
+    } else {
+        line(fx - 3, hy + 7, fx + 3, hy + 7, 1)
+        pset(fx - 3, hy + 8, 1)
+        pset(fx + 3, hy + 8, 1)
+        pset(fx - 2, hy + 6, 7)
+        pset(fx + 2, hy + 6, 7)
+    }
+    // angry: red streaks off the eyes; charging: steam from his nose
+    if banger > 0 and s != "stunned" and s != "hurt" and s != "dying" {
+        pset(fx - 3 - bface * (2 + rnd(3)), hy - rnd(2), 8)
+        pset(fx + 3 - bface * (2 + rnd(3)), hy - rnd(2), 8)
+    }
+
+    if (s == "rev" or s == "charge") and rnd(1) < 0.3 { burst(fx + bface * 2, hy + 4, 1, 6, 0.4) }
+}
+
+func drawFoot(fx, fy) {
+    circfill(fx, fy - 6, 7, 1)
+    circfill(fx, fy - 6, 6, 7)
+    circfill(fx + 1, fy - 4, 4, 6)
+    rectfill(fx - 7, fy - 3, fx + 7, fy, 1)
+    rectfill(fx - 6, fy - 3, fx + 6, fy - 1, 7)
+    pset(fx - 4, fy, 5)
+    pset(fx, fy, 5)
+    pset(fx + 4, fy, 5)
+}
+
+func drawHazards() {
+    for r in rings {
+        circ(r["x"], r["y"], r["r"], 7)
+        if r["r"] > 4 { circ(r["x"], r["y"], r["r"] - 3, 12) }
+    }
+    for d in drops {
+        if d["wait"] > 0 and d["wait"] % 4 < 2 {
+            var yy = 12
+            while yy < FLOOR {
+                pset(d["x"], yy, 8)
+                yy += 6
+            }
+        }
+        spr(144, d["x"] - 4, d["y"])
+    }
+    for w in waves {
+        var h = 6 + sin(w["life"] * 0.6) * 2
+        rectfill(w["x"] - 2, FLOOR - h, w["x"] + 2, FLOOR - 1, 7)
+        rectfill(w["x"] - 1, FLOOR - h - 3, w["x"] + 1, FLOOR - h, 12)
+    }
+    for b in balls {
+        circfill(b["x"], b["y"], 5, 1)
+        circfill(b["x"], b["y"], 4, 7)
+        circfill(b["x"] + 1, b["y"] + 1, 2, 6)
+    }
+    if shardDrop != none {
+        circ(shardDrop["x"] + 4, shardDrop["y"] + 4, 6 + sin(t() * 8) * 2, 11)
+        circ(shardDrop["x"] + 4, shardDrop["y"] + 4, 10 + sin(t() * 8) * 2, 3)
+        spr(109, shardDrop["x"], shardDrop["y"])
+    }
+}
+
+// fog: drifting banks of mist (every other line, flickering) and a blizzard
+func drawFog(camx) {
+    var phase = flr(t() * 12) % 3
+    for f in fog {
+        f["x"] += f["s"]
+        var cx = (f["x"] - camx * 0.7) % 320 - 60
+        if cx < -60 { cx += 320 }
+        var r = f["r"]
+        var dy = -r + phase
+        while dy <= r {
+            var hw = sqrt(max(0, r * r - dy * dy))
+            line(cx - hw, f["y"] + dy, cx + hw, f["y"] + dy, 6)
+            dy += 3
+        }
+    }
+    for s in streaks {
+        s["x"] -= s["s"]
+        s["y"] += s["s"] * 0.3
+        if s["x"] < -6 {
+            s["x"] = SW + 6
+            s["y"] = rnd(128)
+        }
+        if s["y"] > 128 { s["y"] = 0 }
+        line(s["x"], s["y"], s["x"] + 4, s["y"] - 1, 7)
+    }
+}
+
+func drawBossBar() {
+    if bstate == "dead" or bstate == "intro" { return }
+    rectfill(13, 118, 114, 125, 1)
+    print("YETI", 15, 119, 7)
+    rectfill(34, 120, 112, 123, 2)
+    if bhp > 0 { rectfill(34, 120, 34 + bhp * 19 + 1, 123, 8) }
+}
+
+// ---------- drawing ----------
+
+func draw() {
+    camera(-OX, 0)   // menus and story screens: 128 wide, in the middle (the level sets its own camera below)
+    if mode == "settings" {
+        drawSettings()
+        return
+    }
+    if mode == "title" {
+        drawTitle()
+        return
+    }
+    if mode == "epilogue" {
+        if len(lines) > 0 or saying() {
+            drawHeart()
+        } else {
+            drawEpilogue()
+        }
+        return
+    }
+    if mode == "end" {
+        drawEnd()
+        return
+    }
+    var L = LEVELS[level]
+    var camx = clamp(px + 3 - SW / 2, 0, W * 8 - SW)
+    cls(L["sky"])
+    drawBackdrop(camx)
+    camera(camx, 0)
+    map(L["x"], L["y"], 0, 0, W, H)
+    drawIcicles()
+    if isBoss() {
+        drawHazards()
+        drawYeti()
+    }
+    if dead == 0 { drawPip() }
+    camera()
+    if isBoss() { drawFog(camx) }
+    drawHud()
+    camera(-OX, 0)
+    if isBoss() { drawBossBar() }
+    if levelTime < 90 and len(lines) == 0 {
+        rectfill(0, 54, 127, 70, 1)
+        print(L["name"], 64 - len(L["name"]) * 2, 60, 7)
+    }
+    if flash > 0 {
+        if flash > 2 {
+            rectfill(-OX, 0, SW, 127, 7)
+        } else {
+            var fy = flr(t() * 30) % 2
+            while fy < 128 {
+                line(-OX, fy, SW, fy, 7)
+                fy += 2
+            }
+        }
+    }
+    camera(camx, 0)   // so the particles line up with the world
+}
+
+func drawBackdrop(camx) {
+    var sky = LEVELS[level]["sky"]
+    if level == 3 or level == 4 or level == 5 or level == 8 {
+        // cave: far rock and glints
+        var i = 0
+        while i < 14 {
+            var x = i * 24 - (camx * 0.3) % 24
+            circfill(x, 0, 14, 2)
+            circfill(x + 12, 128, 16, 2)
+            pset(x + 5, 40 + (i * 37) % 50, 13)
+            i += 1
+        }
+        return
+    }
+    var far = 6
+    var near = 3
+    if level == 2 {
+        far = 14
+        near = 2
+    }
+    if level == 6 {
+        far = 7
+        near = 13
+    }
+    if level == 7 {
+        far = 7
+        near = 6
+    }
+    // clouds
+    var j = 0
+    while j < 6 {
+        var cx = j * 50 - (camx * 0.1) % 50
+        var cy = 14 + (j * 23) % 30
+        circfill(cx, cy, 6, 7)
+        circfill(cx + 7, cy + 2, 5, 7)
+        circfill(cx - 7, cy + 2, 4, 7)
+        j += 1
+    }
+    // far mountains, then near hills, moving slower than the world
+    var k = 0
+    while k < 8 {
+        var mx = k * 40 - (camx * 0.2) % 40
+        circfill(mx, 150, 46, far)
+        k += 1
+    }
+    k = 0
+    while k < 10 {
+        var hx = k * 26 - (camx * 0.45) % 26
+        circfill(hx, 140, 24, near)
+        k += 1
+    }
+    if level >= 6 {
+        for f in snow {
+            f["y"] += f["s"]
+            f["x"] -= f["s"] * 0.6
+            if f["y"] > 128 { f["y"] = 0 }
+            if f["x"] < 0 { f["x"] = SW }
+            pset(f["x"], f["y"], 7)
+        }
+    }
+}
+
+func drawPip() {
+    var f = flr(t() * 2) % 2
+    if dashTime > 0 {
+        f = 7
+    } else if not grounded and wall != 0 and vy > 0 {
+        f = 8
+    } else if not grounded {
+        f = vy < 0 ? 5 : 6
+    } else if abs(vx) > 0.3 {
+        f = RUN[flr(steps / 5) % 4]
+    }
+    if atkTime > 0 and dashTime == 0 { f = atkTime > 5 ? 9 : 10 }
+    var n = f * 2
+    if f == 8 { n = 32 }
+    if f == 9 { n = 34 }
+    if f == 10 { n = 36 }
+    var flip = facing < 0
+    if f == 8 { flip = wall < 0 }
+    // scarf behind him: red, blue when the dash is used up
+    var col = 8
+    var size = 2
+    for p in scarf {
+        circfill(p["x"], p["y"], size, col)
+        size = max(1, size - 0.3)
+    }
+    spr(n, px - 5, py - 4, 2, 2, flip)
+    pal()
+    // the ember: a little warm spark on the scarf while the dash is ready
+    if canDash and dashTime == 0 {
+        var tip = scarf[len(scarf) - 1]
+        pset(tip["x"] + rnd(2) - 1, tip["y"] - 2 - rnd(2), pick([9, 10, 10, 7]))
+        pset(tip["x"], tip["y"] - 1, 10)
+    }
+    if atkTime > 0 and atkTime <= 5 {
+        var ax = px + 3 + facing * 9
+        var k = (5 - atkTime) * 0.8
+        line(ax, py - 2 + k, ax + facing * 6, py + 6, 7)
+        line(ax + facing * 6, py + 6, ax, py + 14 - k, 7)
+        line(ax - facing, py, ax + facing * 4, py + 6, 12)
+        line(ax + facing * 4, py + 6, ax - facing, py + 12, 12)
+    }
+}
+
+func drawHud() {
+    // small and out of the way: shards and coins, with a shadow so they read on any sky
+    spr(109, 2, 2)
+    print(shards + "/9", 12, 5, 1)
+    print(shards + "/9", 11, 4, 7)
+    spr(110, 30, 2)
+    print("" + berries, 40, 5, 1)
+    print("" + berries, 39, 4, 7)
+}
+
+var LOGO = [
+    ["11111", "10000", "11111", "00001", "11111"],
+    ["10001", "10001", "11111", "10001", "10001"],
+    ["01110", "10001", "11111", "10001", "10001"],
+    ["11110", "10001", "11110", "10100", "10011"],
+    ["11110", "10001", "10001", "10001", "11110"]
+]
+var tmenu = 0
+
+// the big SHARD letters, drawn from little pixel maps
+func drawLogo(x, y, s) {
+    var k = 0
+    while k < 5 {
+        var row = 0
+        while row < 5 {
+            var col = 0
+            while col < 5 {
+                if slice(LOGO[k][row], col, col + 1) == "1" {
+                    var px0 = x + k * (s * 5 + s) + col * s
+                    var py0 = y + row * s
+                    rectfill(px0 + 1, py0 + 2, px0 + s, py0 + s + 1, 3)
+                    rectfill(px0, py0, px0 + s - 1, py0 + s - 1, row == 0 ? 7 : 11)
+                }
+                col += 1
+            }
+            row += 1
+        }
+        k += 1
+    }
+}
+
+func updateTitle() {
+    if btnp(2) or btnp(3) or keyp("w") or keyp("s") { tmenu = 1 - tmenu }
+    var my = mousey()
+    var picked = false
+    if click() and mousex() - OX > 40 and mousex() - OX < 88 {
+        if my >= 64 and my < 73 {
+            tmenu = 0
+            picked = true
+        }
+        if my >= 74 and my < 83 {
+            tmenu = 1
+            picked = true
+        }
+    }
+    if picked or keyp("enter") or btnp(4) or hit("jump") or keyp("space") {
+        if tmenu == 0 {
+            startGame()
+        } else {
+            openSettings("title")
+        }
+    }
+}
+
+func drawTitle() {
+    cls(1)
+    // stars
+    var i = 0
+    while i < 40 {
+        var c = (i + flr(t() * 2)) % 9 == 0 ? 7 : 13
+        pset((i * 53) % SW - OX, (i * 29) % 70, c)
+        i += 1
+    }
+    // mountains: a far range, then the big peak with the shard above it
+    var y = 60
+    while y < 128 {
+        var a = (y - 60) * 1.4
+        line(20 - a, y, 20 + a, y, 2)
+        line(-40 - a, y, -40 + a, y, 2)
+        line(168 - a, y, 168 + a, y, 2)
+        line(108 - a, y, 108 + a, y, 2)
+        y += 1
+    }
+    y = 52
+    while y < 128 {
+        var half = (y - 52) * 1.1
+        line(64 - half, y, 64 + half, y, y < 61 ? 7 : 5)
+        y += 1
+    }
+    var glow = 2 + sin(t() * 3) * 2
+    circ(64, 44 + sin(t() * 2), 6 + glow, 3)
+    spr(109, 60, 40 + sin(t() * 2))
+    // snowy ground and Pip
+    rectfill(-OX, 104, SW, 127, 7)
+    rectfill(-OX, 104, SW, 105, 6)
+    var s = 0
+    while s < 5 {
+        circfill(18 - s * 3, 95 + sin(t() * 6 + s) * 1.5, max(1, 2 - s * 0.3), 8)
+        s += 1
+    }
+    spr(flr(t() * 2) % 2 * 2, 18, 88, 2, 2)
+    // falling snow
+    for f in snow {
+        f["y"] += f["s"]
+        f["x"] -= f["s"] * 0.5
+        if f["y"] > 128 { f["y"] = 0 }
+        if f["x"] < 0 { f["x"] = SW }
+        pset(f["x"] - OX, f["y"], 7)
+    }
+    drawLogo(20, 8, 3)
+    print("PIP AND THE EMERALD HEART", 14, 26, 6)
+    // the menu
+    var names = ["START", "SETTINGS"]
+    var k = 0
+    while k < 2 {
+        var ry = 66 + k * 10
+        if k == tmenu {
+            rectfill(40, ry - 2, 87, ry + 6, 3)
+            print(">", 42, ry, 11)
+        }
+        print(names[k], 64 - len(names[k]) * 2, ry, k == tmenu ? 7 : 6)
+        k += 1
+    }
+    if dget(0) > 0 { print("BEST " + fixed(dget(0), 1) + "S", 84, 120, 5) }
+}
+func drawEnd() {
+    cls(1)
+    menuCard("THE END")
+    var glow = 2 + sin(t() * 3) * 2
+    circ(64, 38, 12 + glow, 3)
+    sspr(104, 48, 8, 8, 52, 26, 24, 24)
+    print("THE HEART IS WHOLE", 28, 58, 11)
+    print("COINS  " + berries + " / " + BERRIES, 64 - (10 + len("" + berries)) * 2, 72, 7)
+    print("FALLS  " + deaths, 64 - (7 + len("" + deaths)) * 2, 81, 7)
+    var tm = fixed(finishTime, 1) + "S"
+    print("TIME  " + tm, 64 - (6 + len(tm)) * 2, 90, 10)
+    if flr(t() * 2) % 2 == 0 { print("PRESS SPACE", 42, 116, 6) }
+}
+
+// while the last story boxes play: the shards come together
+func drawHeart() {
+    cls(1)
+    var k = 0
+    while k < 9 {
+        var a = k * 0.7 + t()
+        var r = max(0, 40 - t() * 4 % 40)
+        line(64, 50, 64 + cos(a) * 60, 50 + sin(a) * 60, 2)
+        k += 1
+    }
+    var glow = 3 + sin(t() * 4) * 2
+    circfill(64, 50, 14 + glow, 3)
+    circ(64, 50, 18 + glow, 11)
+    sspr(104, 48, 8, 8, 48, 34, 32, 32)
+}
+//@sprites
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//00000000000000000000000000000000000000000000000000000111111000000000000000000000000000000000000000000000000000000000000000000000
+//00000111111000000000000000000000000001111110000000001bbbbbb100000000011111100000000001111110000000000111111000000000001111110000
+//00001bbbbbb10000000001111110000000001bbbbbb100000001b3bbbbbb100000001bbbbbb1000000001bbbbbb1000000001bbbbbb10000000001bbbbbb1000
+//0001b3bbbbbb100000001bbbbbb100000001b3bbbbbb10000001bbbbbbbbb1100001b3bbbbbb10000001b3bbbbbb10000001b3bbbbbb100000001b3bbbbbb100
+//0001bbbbbbbbb1100001b3bbbbbb10000001bbbbbbbbb11000014ffffff111000001bbbbbbbbb1100001bbbbbbbbb1100001bbbbbbbbb11000001bbbbbbbbb11
+//00014ffffff111000001bbbbbbbbb11000014ffffff11100000144ff1f1f100000014ffffff1110000014ffffff1110000014ffffff11100000014ffffff1110
+//000144ff1f1f100000014ffffff11100000144ff1f1f100000014ffffff91000000144ff1f1f1000000144ff1f1f1000000144ff1f1f10000000144ff1f1f100
+//00014ffffff91000000144ff1f1f100000014ffffff91000000001ffff10000000014ffffff9100000014ffffff9100000014ffffff91000000014ffffff9100
+//000001ffff10000000014ffffff91000000001ffff100000000113bbbbb31100000001ffff100000000001ffff100000000001ffff1000000000001ffff10000
+//000113bbbbb31100000001ffff100000000113bbbbb31100001f13bbbbb31f10000113bbbbb3110000f113bbbbb311f000f113bbbbb311f00000113bbbbb3110
+//001f13bbbbb31f10000113bbbbb31100001f13bbbbb31f100001144a44410000001f13bbbbb31f1000013bbbbbbb100000013bbbbbbb10000001f13bbbbb31f1
+//0001144a44410000001f13bbbbb31f100001144a44410000000013b33b3100000001144a444100000001144a444100000001144a444100000001144a44410000
+//000013b33b3100000001144a44410000000013b33b310000000013b33b310000000013b33b310000000013b33b310000000013b33b310000000013b33b310000
+//00001110011100000000111001110000000111000011100000000111100000000000110001110000000014410144100000011000001100000011111000000000
+//00014410014410000001441001441000001441000001441000000144410000000001440001441000000000000000000000144000004410000144114410000000
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//00000111111000000000011111100000000000111111000000000111111000000000000000000000000000000000000000000000000000000000000000000000
+//00001bbbbbb1000000701bbbbbb10000000001bbbbbb100000001999999100000000000000000000000000000000000000000000000000000000000000000000
+//0001b3bbbbbb10000061b3bbbbbb100000001b3bbbbbb10000019999999910000000000000000000000000000000000000000000000000000000000000000000
+//0001bbbbbbbbb1100041bbbbbbbbb11000001bbbbbbbbb1100019ffffff910000000000000000000000000000000000000000000000000000000000000000000
+//00014ffffff1110000f14ffffff11100000014ffffff111000019f1ff1f910000000000000000000000000000000000000000000000000000000000000000000
+//000144ff1f1f1000000144ff1f1f10000000144ff1f1f10000019ffffff910000000000000000000000000000000000000000000000000000000000000000000
+//00014ffffff9100000014ffffff91000000014ffffff9100000199ffff9910000000000000000000000000000000000000000000000000000000000000000000
+//000001ffff100000000001ffff1000000000001ffff100000001991ff19910000000000000000000000000000000000000000000000000000000000000000000
+//00f113bbbbb311f0000113bbbbb311000000113bbbbb31f600019e1ee1e910000000000000000000000000000000000000000000000000000000000000000000
+//00013bbbbbbb1000000113bbbbb31f100001f13bbbbb3100001f1eeeeee1f1000000000000000000000000000000000000000000000000000000000000000000
+//0001144a444100000001144a444100000001144a4441000000001eeeeee100000000000000000000000000000000000000000000000000000000000000000000
+//000013b33b310000000013b33b310000000013b33b3100000001eeeeeeee10000000000000000000000000000000000000000000000000000000000000000000
+//00001110111000000000111001110000000111000111000000000110011000000000000000000000000000000000000000000000000000000000000000000000
+//00001441441000000001441001441000001441000144100000001440044100000000000000000000000000000000000000000000000000000000000000000000
+//94442444bbbbbbbb94442444bbbbbbbb144424440bbbbbbb144424440bbbbbbb94442441bbbbbbb094442441bbbbbbb0144424410bbbbbb0144424410bbbbbb0
+//44494442b3bb3bb344494442b3bb3bb314494442b3bb3bb314494442b3bb3bb344494441b3bb3bb344494441b3bb3bb314494441b3bb3bb314494441b3bb3bb3
+//44444494434434344444449443443434144444941344343414444494134434344444449143443431444444914344343114444491134434311444449113443431
+//54444444544444445444444454444444144444441444444414444444144444445444444154444441544444415444444114444441144444411444444114444441
+//44454444444544444445444444454444144544441445444414454444144544444445444144454441444544414445444114454441144544411445444114454441
+//44244454442444544424445444244454142444541424445414244454142444544424445144244451442444514424445114244451142444511424445114244451
+//49444244494442442222222222222222194442441944424412222222122222224944424149444241222222212222222119444241194442411222222112222221
+//44449444444494441111111111111111144494441444944401111111011111114444944144449441111111101111111014449441144494410111111001111110
+//ddd1dddd77777777ddd1dddd777777771dd1dddd077777771dd1dddd07777777ddd1ddd177777770ddd1ddd1777777701dd1ddd1077777701dd1ddd107777770
+//55516555776776775551655577677677155165557767767715516555776776775551655177677677555165517767767715516551776776771551655177677677
+//55515555655656555551555565565655155155556556565515515555655656555551555165565651555155516556565115515551655656511551555165565651
+//11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
+//ddddddd1ddddddd1ddddddd1ddddddd11dddddd11dddddd11dddddd11dddddd1ddddddd1ddddddd1ddddddd1ddddddd11dddddd11dddddd11dddddd11dddddd1
+//65555651655556516555565165555651155556511555565115555651155556516555565165555651655556516555565115555651155556511555565115555651
+//55556551555565515555655155556551155565511555655115556551155565515555655155556551555565515555655115556551155565511555655115556551
+//11111111111111111111111111111111111111111111111101111111011111111111111111111111111111101111111011111111111111110111111001111110
+//00000000111111111566000000006651000000000888888099999994909990941444444444444444444444410009000000000000003bb3000011110000030000
+//000000005555555515676700007676510000000008eeee809a9994949a900494199999999999999999999991009a90000000000003b77b3001aaaa10000b0000
+//070007006666666615660000000066510000000000600600994499940944909414444444444444444444444109aa7900000400003bb7bbb31a7aa9a100300000
+//060006006760676015600000000006510888888000066000949999499409990901000000001001000000001009a77a90004040003bbbbbb31a7a9aa100b00000
+//6760676006000600156600000000665108eeee800060060099949994909499940010000000000000000001009aa77aa90400040003bbbb301aa79aa100030000
+//6666666607000700156767000076765100600600000660009a4999949a4909040000000000000000000000009a7777a904000400003bb3001aa9aa91000b3000
+//555555550000000015660000000066510006600000600600999994949909949000000000000000000000000009aaaa900044400000033000019999110000b000
+//11111111000000001560000000000651011551100115511044444444444404440000000000000000000000000099990000000000000000000011110000030000
+//000000000000000000000000000000000000000000000000000000000000004400003333333300003bbbbbbb44000000bbbbbbb3000000000000000007777770
+//00000000000000000000000000000000000000000000000000000000000000410033bbbbbbbb33003bbb3bbb14000000bbb3bbb3000000000000000000677600
+//000800000000000000000000008880000000000000003330033300000000004403bbbbbbbbbbbb3003bbbbbb44000000bbbbbb300000d0000000000000677000
+//008a8000000a00000000000008788800000000000033bbb33bbb33000000004403bb3bbbbbb3bb30033bbbbb44000000bbbbb330000dc0000000000000067000
+//0008000000a9a00000000000088887800000000003bbbbbbbbbbbb30000000143bbbbbbbbbbbbbb3000333bb41000000bb3330000d0dc0d00000000000060000
+//00030000000a0000000b000000077000000000003bb3bbbbbbbb3bb3000000443bbbbb3bb3bbbbb30000003444000000430000000dcdccd00007700000060000
+//00b30000000300000b0b0b0000077000000560003bbbbb3bb3bbbbb3000000413b3bbbbbbbbbb3b3000000441400000044000000ddcdccdd0777766000000000
+//00030000003b300000bbb00000677600005556003333333333333333000000443bbbbbbbbbbbbbb30000004444000000440000001d1dd1d17777666600000000
+//7cdcccc7777777777cdcccc7777777771cdcccc7077777771cdcccc7077777777cdcccc1777777707cdcccc1777777701cdcccc1077777701cdcccc107777770
+//cccdcc7c7c777c77cccdcc7c7c777c771ccdcc7c1c777c771ccdcc7c1c777c77cccdcc717c777c71cccdcc717c777c711ccdcc711c777c711ccdcc711c777c71
+//ccccd7ccccccd7ccccccd7ccccccd7cc1cccd7cc1cccd7cc1cccd7cc1cccd7ccccccd7c1ccccd7c1ccccd7c1ccccd7c11cccd7c11cccd7c11cccd7c11cccd7c1
+//cccc7dcccccc7dcccccc7dcccccc7dcc1ccc7dcc1ccc7dcc1ccc7dcc1ccc7dcccccc7dc1cccc7dc1cccc7dc1cccc7dc11ccc7dc11ccc7dc11ccc7dc11ccc7dc1
+//ccc7ccdcccc7ccdcccc7ccdcccc7ccdc1cc7ccdc1cc7ccdc1cc7ccdc1cc7ccdcccc7ccd1ccc7ccd1ccc7ccd1ccc7ccd11cc7ccd11cc7ccd11cc7ccd11cc7ccd1
+//cc7ccccdcc7ccccdcc7ccccdcc7ccccd1c7ccccd1c7ccccd1c7ccccd1c7ccccdcc7cccc1cc7cccc1cc7cccc1cc7cccc11c7cccc11c7cccc11c7cccc11c7cccc1
+//c7ccccccc7ccccccc7ccccccc7cccccc17cccccc17cccccc17cccccc17ccccccc7ccccc1c7ccccc1c7ccccc1c7ccccc117ccccc117ccccc117ccccc117ccccc1
+//7cccccc77cccccc711111111111111111cccccc71cccccc701111111011111117cccccc17cccccc111111110111111101cccccc11cccccc10111111001111110
+//17777770000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//017cc710000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//001c7100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//001c7000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//0001c100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//0001c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//00001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//@flags
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010101010101010101010101010101010101010101010101010101010101010102020202101081814040402000080400000000000000000000000000000000000101010101010101010101010101010102
+//@map
+//0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005353535353535353535353535353535353535353535353535353535353535353
+//0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007f00007f007f00000000007f7f000000007f00007f007f7f7f00007f7f000000
+//000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006e000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000071716d710000000000000000000000000000000000000000000000000000000000000000
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006b0000454141410000000000000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000727200740000000000444040400000000000000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000454141490000000000444040400000000000000000000000000000000000000000000000000000000000000000
+//00000000000000000000000000000000000000000000000000000000006e0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000444040480000000000444040400000000000000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000000000000000000000000068696a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000066666600444040480000000000444040400000000000000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000006e000000000000000000700072000000000000000000000000000000000000000000000000000000000000006e0000000000000000007576727200000074000000000000444040480000000000444040400000006869696a0000000000000000000000000000000000006869696a000000
+//00000000000000000000006e00006869696a0000000000454141414900000000000000000000000075767272006d72720000000000000000000000000000000000000000004541414141414141490000000000444040480000000000444040400000000000000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000000000007100444040404800000000000000000000004541414141414141410000000000000000000000000000000000000000004440404040404040480000000000444040480000000000444040400000000000000000000000000000000000000000000000000000000000000000
+//727000740000700000000000007072720000704541414140404040480000007400006060007200444040404040404040727000007400007200000000000000000060607172444040404040404048000000000044404048000000000044404040007e007d0000007e00007e7e007e7d0000747d007e74007e7e7e0000747e747e
+//4141414141414141414900000045414141414140404040404040404800000045414141414141414040404040404040404141414141414149000000000000004541414141414040404040404040480000000000444040480000000000444040405151515151515151515151515151515151515151515151515151515151515151
+//4040404040404040404800000044404040404040404040404040404800000044404040404040404040404040404040404040404040404048000000000000004440404040404040404040404040480000000000444040480000000000444040405050505050505050505050505050505050505050505050505050505050505050
+//4040404040404040404800000044404040404040404040404040404800000044404040404040404040404040404040404040404040404048000000000000004440404040404040404040404040480000000000444040480000000000444040405050505050505050505050505050505050505050505050505050505050505050
+//0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151510000000000000000000000000000000000000000000000000000000000000000
+//000000000000000000000000000000000000000000000000006e000000000000000000000000000000000000000000005252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252520000000000000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007f00007f7f00000000007f0000006161616161617f007f0000007f00616161616161007f7f0000000000000000007f7f0000000000000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000000000000000000000000072740000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000700000000000000000000000000045490000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006e00000000000000000000000000000000000000000000000000000000000000000000000000
+//0000000000000000006869696a004541490000000000000000000000444800000000000000000000000000000000000000000000000000000000000000000000006e0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//000000000000000000000000000044404800000000000000000000004448000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006b000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//000000000000000000000000000044404800666600727100716400004448000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007d7e00007d007e006d00740000000000000000000000000000000000000000000000000000000000000000
+//00000000000000000000000000004440480000000045414141414900444800000000000000000000000000000000000000000000000000000000000000000000007e000000000000000000000000006b000000000055515151515151515151510000000000000000000000000000000000000000000000000000000000000000
+//000000000000000000000000000044404800000000444040404048004448007879000000000000006e000000000000000000000000000000000000000000000055590000000000000066666600000000000000000054505050505050505050500000000000000000000000000000000000000000000000000000000000000000
+//000000000000000000000000000044404800000000444040404048004448007a7c00000000006869696a00000000000000000000000000000000007e7e00000054580000000000000000000000000000000000000054505050505050505050500000000000000000000000000000000000000000000000000000000000000000
+//00000000000000000000000000004440480000000044404040404800444800777b0000000000000000000000000000007e00007e007d0000000000555900000054580000005559000000000000000000000000000054505050505050505050500000000000000000000000000000000000000000000000000000000000000000
+//00007576727072640000000000004440480000000044404040404800444872777b7060606000000071737471736d72745151515151515900000000545800000054580000005458000000000000000000000000000054505050505050505050500000000000000000000000000000000000000000000000000000000000000000
+//4141414141414149000000000000444048000000004440404040480044404141414141414141414141414141414141415050505050505800000000545800000054580000005458000000000000000000000000000054505050505050505050500000000000000000000000000000000000000000000000000000000000000000
+//4040404040404048606060606060444048000000004440404040480044404040404040404040404040404040404040405050505050505860606060545860606054586060605458606060606060606060606060606054505050505050505050500000000000000000000000000000000000000000000000000000000000000000
+//4040404040404040414141414141404048000000004440404040480044404040404040404040404040404040404040405050505050505051515151505051515150505151515050515151515151515151515151515150505050505050505050500000000000000000000000000000000000000000000000000000000000000000
+//8181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181815151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151510000000000000000000000000000000000000000000000000000000000000000
+//8282828282828282828282828282828282828282828282828282828282828282828282828282828282828282828282825252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252520000000000000000000000000000000000000000000000000000000000000000
+//000000000000900000900000000000000090009000900000000000000090009000000000000090000000009000000000007f7f7f7f007f7f61616161616161616161616161616161616161616161616161616161616161616100007f0000007f0000000000000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006e0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//000000000000000000000000000000000000000000000000000000000000000000000000000000006e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//000000000000000000000000000000000000000000000000006e00000000000000000000007d0000000000000000000000000000000000000000006b00000000000000000000006b000000000000000000006b0000006b0000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//000000000000000000000000006e0000000000000000000000000000000000000000666600858189000000000000000000000000000000000000000000000000006e0000000000000000000000000000000000000000000000000000006d7e740000000000000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000000000000000000000007e000000007e000000008480880074747e006d7d0074007e007e7d00000000000000000000007474000000000000000000747e0000000000000000000000005551515151510000000000000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000007d7e740000000000008581818181890000000084808081818181818181815151515151590000000000000000000000555900000000000000000055590000000000000000000000005450505050500000000000000000000000000000000000000000000000000000000000000000
+//7e7e007d007e00007d747e7d0000008581818181818189000000008480808080880000000084808080808080808080805050505050580000000000000000000000545800000000000000000054580000000000000000000000005450505050500000000000000000000000000000000000000000000000000000000000000000
+//8181818181818181818181890000008480808080808088000000008480808080880000000084808080808080808080805050505050580000000000000000000000545800000000000000000054580000000000000000000000005450505050500000000000000000000000000000000000000000000000000000000000000000
+//8080808080808080808080880000008480808080808088606060608480808080880000000084808080808080808080805050505050586060606060606060606060545860606060606060606054586060606060606060606060605450505050500000000000000000000000000000000000000000000000000000000000000000
+//8080808080808080808080880000008480808080808080818181818080808080880000000084808080808080808080805050505050505151515151515151515151505051515151515151515150505151515151515151515151515050505050500000000000000000000000000000000000000000000000000000000000000000
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006e0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000074007e7400000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//00000000000000000000000000000000000000000000000000000000006e0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005753535b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//00000000000000000000000000000000000000000000000000000000000000000000006e00000000000000000000000000000000000000006e000000000000006b0000000000000000000000000000000000007f0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000000000000000000000006869696a00000000000000000000000000000000000000000000000000000000555900000000000000666666000000000000000000000000000000666600000000000000000000000000000000000000000000000000000000000000000000000000000000
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005458000000000000000000000000007e000000000000000000000000000000666600006d000000000000000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000000000000000000000000000000000006666000000000000000000000000000000000000006869696a00545800000000000000000000005551590000000000000000000000000000000000005551510000000000000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000000000000000000000000000000000000000006666000000000000000000000000000000000000000000545800000000000000000000005450580000000000000000000000000000000000005450500000000000000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000000000000000000000000000000000000000000000006600000000000000000000000000000000000000545800000000000000000000005450580000006400000000000000000000000000005450500000000000000000000000000000000000000000000000000000000000000000
+//0000000000000000000000006e000000000000000000000000000000000000000000000000000000000074007d6d00740000000000000000000000545800000000000000000000005450580000555159000000000000000000000000005450500000000000000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000000000007e7e006400000000000000000000000000000000858181818181810000000000000000000000545800000000000000000000005450580000545058000000000000000000000000005450500000000000000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000000000858181818900000000000000000000000000000000848080808080800000000000000000000000545800000000000000000000005450580000545058000000000000000000000000005450500000000000000000000000000000000000000000000000000000000000000000
+//7e7e00007e74007d74747d0000007e000060000084808080880000000000000000000000000000000084808080808080007e000064000000000000545800000000000000000000005450580000545058000000000000000000000000005450500000000000000000000000000000000000000000000000000000000000000000
+//8181818181818181818181818181818181890000848080808800000000000000000000000000000000848080808080805151515159000000000000545800000000000000000000005450580000545058000000000000000000000000005450500000000000000000000000000000000000000000000000000000000000000000
+//8080808080808080808080808080808080880000848080808800000000000000000000000000000000848080808080805050505058606060606060545860606060606060606060605450586060545058606060606060606060606060605450500000000000000000000000000000000000000000000000000000000000000000
+//8080808080808080808080808080808080880000848080808800000000000000000000000000000000848080808080805050505050515151515151505051515151515151515151515050505151505050515151515151515151515151515050500000000000000000000000000000000000000000000000000000000000000000
+//@sfx
+//030000142511c251202510000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//020000325532d553285532355300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//020000283531e353000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//04000024150281502b1503015000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//0400001e55319553145530f5530a553000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//060000181521c1521f1522415224152000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//--
+//--
+//1200002104021030210200000024040240302402000000280402803028020000002404024030240200000021040210302102000000230402303023020000002404024030240200000000000000000000000000
+//1200001d0401d0301d020000002104021030210200000024040240302402000000210402103021020000001d0401d0301d020000001f0401f0301f020000002104021030210200000000000000000000000000
+//1200001c0401c0301c020000001f0401f0301f02000000240402403024020000001f0401f0301f020000001c0401c0301c020000001f0401f0301f020000002104021030210200000023040230302302000000
+//1200001f0401f0301f020000002304023030230200000026040260302602000000230402303023020000001f0401f0301f02000000210402103021020000002304023030230200000000000000000000000000
+//120000151401513015120151101c1301c1201c11000000151401513015120151101c1301c1201c11000000151401513015120151101c1301c1201c11000000151401513015120151101c1301c1201c11000000
+//1200001114011130111201111018130181201811000000111401113011120111101813018120181100000011140111301112011110181301812018110000001114011130111201111018130181201811000000
+//1200000c1400c1300c1200c110131301312013110000000c1400c1300c1200c110131301312013110000000c1400c1300c1200c110131301312013110000000c1400c1300c1200c11013130131201311000000
+//120000131401313013120131101a1301a1201a11000000131401313013120131101a1301a1201a11000000131401313013120131101a1301a1201a11000000131401313013120131101a1301a1201a11000000
+//1200000000000000000000000000000000002d0200000000000000000000000000000000000034020000000000000000000000000000000000002d020000000000000000000000000000000000003002000000
+//1200000000000000000000000000000000002902000000000000000000000000000000000000300200000000000000000000000000000000000029020000000000000000000000000000000000002d02000000
+//1200000000000000000000000000000000002802000000000000000000000000000000000000300200000000000000000000000000000000000028020000000000000000000000000000000000002d02000000
+//1200000000000000000000000000000000002b0200000000000000000000000000000000000032020000000000000000000000000000000000002b020000000000000000000000000000000000002f02000000
+//@music
+//1080c10ff
+//0090d11ff
+//00a0e12ff
+//20b0f13ff
