@@ -1166,8 +1166,8 @@ namespace shard {
         game.showLongText("PIP: THANK YOU, MOUNTAIN. FOR EVERY SPRING.", DialogLayout.Bottom)
         game.showLongText("WARMTH ROLLS DOWN THE SLOPES. THE RIVERS START TO RUN. FAR BELOW, BRAM LAUGHS.", DialogLayout.Bottom)
         game.showLongText("AND LATER... PIP AND HIS FRIEND BRAE SPENT THE WARM DAYS BY THE WATERFALL.", DialogLayout.Center)
-        game.showLongText("UNTIL ONE EVENING, THEY LOOKED UP AT THE MOUNTAIN... AND SOMETHING WAS LOOKING BACK.", DialogLayout.Center)
-        game.showLongText("THE END?    COINS: " + info.score() + " / 19    FALLS: " + deaths, DialogLayout.Center)
+        
+        game.showLongText("THE END.    COINS: " + info.score() + " / 19    FALLS: " + deaths, DialogLayout.Center)
         game.over(true)
     }
 

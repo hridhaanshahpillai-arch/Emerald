@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wall Crystal Test</title>
+<style>
+  html, body { margin:0; height:100%; background:#12161a; color:#b8bccb; font:14px "Segoe UI", system-ui, sans-serif; }
+  body { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; }
+  canvas { image-rendering:pixelated; background:#2B2D42; }
+  p { margin:0; } b { color:#00E756; }
+</style>
+</head>
+<body>
+<canvas id="game" width="320" height="176"></canvas>
+<p><b>A D</b> run &nbsp; <b>W</b> jump (at a wall: kick off) &nbsp; <b>Space</b> dash (aim with W A S D) &nbsp; <b>R</b> restart</p>
+<p>Pink ember = dash back. <b>Green wall crystal</b> = run up the next wall you touch.</p>
+<script>
+const T = 8, W = 40, H = 22;
+const canvas = document.getElementById("game"), g = canvas.getContext("2d");
+
+// ---------- the room ----------
+const grid = [...Array(H)].map(() => Array(W).fill("."));
+function fill(x0, y0, x1, y1, c) { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) grid[y][x] = c; }
+fill(0, 0, W - 1, 0, "#"); fill(0, 0, 0, H - 1, "#"); fill(W - 1, 0, W - 1, H - 1, "#");
+fill(1, 20, 12, 21, "#");                 // start floor
+fill(10, 10, 12, 21, "#");                // a tower too tall to jump
+fill(13, 21, 21, 21, "#"); fill(13, 20, 21, 20, "^");   // spike pit
+fill(22, 4, 24, 21, "#");                 // the big wall across the pit
+fill(25, 21, 35, 21, "#"); fill(25, 20, 35, 20, "^");
+fill(36, 3, 38, 21, "#");                 // the shard's tower
+grid[19][2] = "P";
+grid[17][7] = "R";                        // wall crystal before the tower
+grid[8][17] = "R";                        // wall crystal over the pit
+grid[5][28] = "R";                        // last gap: a wall crystal, then an ember to dash on to the tower
+grid[10][32] = "D";
+grid[2][37] = "G";
+
+const COLORS = { stone:"#5A5D70", stoneTop:"#B8BCCB", stoneDark:"#1D1E26", spike:"#FFF6F0", ember:"#FF8FC7", crystal:"#00E756", shard:"#00E756" };
+let start, crystals, p, won, deaths = 0, timer = 0, particles = [];
+
+function reset() {
+  crystals = [];
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const c = grid[y][x];
+    if (c === "P") start = { x: x * T + 1, y: (y + 1) * T - 10 };
+    if (c === "D" || c === "R") crystals.push({ kind: c, x: x * T + 4, y: y * T + 4, wait: 0 });
+  }
+  p = { x: start.x, y: start.y, w: 6, h: 10, vx: 0, vy: 0, face: 1, grounded: false, coyote: 0, dash: 1, dashT: 0, dvx: 0, dvy: 0,
+        lock: 0, charged: false, runT: 0, dead: 0 };
+  won = false;
+}
+
+function solidAt(px, py) {
+  const tx = Math.floor(px / T), ty = Math.floor(py / T);
+  if (tx < 0 || tx >= W || ty < 0 || ty >= H) return true;
+  return grid[ty][tx] === "#";
+}
+function hits(x, y, w, h) {
+  for (let yy = y; yy < y + h; yy += 4) for (let xx = x; xx < x + w; xx += 3) if (solidAt(xx, yy)) return true;
+  return solidAt(x + w - 1, y) || solidAt(x, y + h - 1) || solidAt(x + w - 1, y + h - 1);
+}
+function touching(c) {
+  for (let y = Math.floor((p.y + 2) / T); y <= Math.floor((p.y + p.h - 2) / T); y++)
+    for (let x = Math.floor((p.x + 1) / T); x <= Math.floor((p.x + p.w - 2) / T); x++)
+      if (grid[y] && grid[y][x] === c) return true;
+  return false;
+}
+
+// ---------- input ----------
+const down = {}, pressed = {};
+addEventListener("keydown", e => { const k = e.key.toLowerCase(); if (!down[k]) pressed[k] = true; down[k] = true; if (k === " ") e.preventDefault(); });
+addEventListener("keyup", e => { down[e.key.toLowerCase()] = false; });
+
+function burst(x, y, color, n) {
+  for (let i = 0; i < n; i++) particles.push({ x, y, vx: (Math.random() - .5) * 2, vy: (Math.random() - .5) * 2, life: 20 + Math.random() * 10, color });
+}
+
+function die() {
+  burst(p.x + 3, p.y + 5, "#FF5E7E", 20);
+  deaths++;
+  p.dead = 30;
+}
+
+// ---------- one frame ----------
+function update() {
+  if (pressed["r"]) { reset(); deaths++; }
+  if (won) return;
+  timer++;
+  if (p.dead > 0) { if (--p.dead === 0) { const d = deaths; reset(); deaths = d; } return; }
+
+  const dx = (down["d"] ? 1 : 0) - (down["a"] ? 1 : 0), dy = (down["s"] ? 1 : 0) - (down["w"] ? 1 : 0);
+  const wall = p.grounded ? 0 : hits(p.x + p.w, p.y + 1, 1, p.h - 2) ? 1 : hits(p.x - 1, p.y + 1, 1, p.h - 2) ? -1 : 0;
+
+  if (p.dashT > 0) {
+    p.dashT--;
+    p.vx = p.dvx; p.vy = p.dvy;
+    if (p.dashT === 0) { p.vx *= .5; p.vy *= .5; }
+    particles.push({ x: p.x + 3, y: p.y + 5, vx: 0, vy: 0, life: 12, color: "#FF5E7E" });
+  } else if (p.runT > 0) {
+    // running up the wall
+    p.runT--;
+    p.vy = -2.4;
+    p.vx = wall * .5;
+    particles.push({ x: p.x + 3 + wall * 3, y: p.y + 9, vx: 0, vy: .5, life: 14, color: "#00E756" });
+    if (wall === 0) { p.runT = 0; p.vy = -2.6; p.vx = p.face * 1.2; }          // over the top: a little hop onto it
+    else if (pressed["w"]) { p.runT = 0; p.vx = -wall * 2.4; p.vy = -3.2; p.face = -wall; p.lock = 10; burst(p.x + 3, p.y + 5, "#00E756", 8); }
+  } else {
+    if (p.lock > 0) p.lock--;
+    else p.vx += (dx * 1.5 - p.vx) * (p.grounded ? .3 : .15);
+    if (dx) p.face = dx;
+    p.vy += down["w"] && p.vy < 0 ? .15 : .25;
+    if (wall && dx === wall && p.vy > .8) p.vy = .8;                       // slide down slowly
+    p.vy = Math.min(p.vy, 3.2);
+    if (p.charged && wall) {                                               // the wall crystal kicks in
+      p.charged = false; p.runT = 60; p.face = wall; burst(p.x + 3, p.y + 5, "#00E756", 10);
+    } else if (pressed["w"]) {
+      if (p.grounded || p.coyote > 0) { p.vy = -3.5; p.coyote = 0; }
+      else if (wall) { p.vx = -wall * 2.2; p.vy = -3.3; p.face = -wall; p.lock = 10; burst(p.x + 3 + wall * 3, p.y + 8, "#FFF6F0", 5); }
+    }
+    if (pressed[" "] && p.dash > 0) {
+      let ax = dx, ay = dy;
+      if (!ax && !ay) ax = p.face;
+      const len = Math.hypot(ax, ay);
+      p.dvx = ax / len * 3.4; p.dvy = ay / len * 3.4;
+      p.dashT = 9; p.dash = 0;
+      burst(p.x + 3, p.y + 5, "#FF5E7E", 8);
+    }
+  }
+
+  // move a pixel at a time so walls stop Pip exactly
+  let mx = p.vx, my = p.vy;
+  while (Math.abs(mx) > 0) {
+    const s = Math.sign(mx) * Math.min(1, Math.abs(mx));
+    if (hits(p.x + s, p.y, p.w, p.h)) { p.vx = 0; break; }
+    p.x += s; mx -= s;
+  }
+  p.grounded = false;
+  while (Math.abs(my) > 0) {
+    const s = Math.sign(my) * Math.min(1, Math.abs(my));
+    if (hits(p.x, p.y + s, p.w, p.h)) { if (s > 0) p.grounded = true; p.vy = 0; break; }
+    p.y += s; my -= s;
+  }
+  if (!p.grounded && hits(p.x, p.y + 1, p.w, p.h)) p.grounded = true;
+  if (p.grounded) { p.coyote = 6; if (p.dashT === 0) p.dash = 1; p.runT = 0; } else if (p.coyote > 0) p.coyote--;
+
+  for (const c of crystals) {
+    if (c.wait > 0) { c.wait--; continue; }
+    if (Math.abs(p.x + 3 - c.x) < 7 && Math.abs(p.y + 5 - c.y) < 8) {
+      if (c.kind === "D" && p.dash === 0) { p.dash = 1; c.wait = 120; burst(c.x, c.y, COLORS.ember, 12); }
+      if (c.kind === "R" && !p.charged) { p.charged = true; c.wait = 120; burst(c.x, c.y, COLORS.crystal, 12); }
+    }
+  }
+  if (touching("^")) die();
+  if (touching("G")) { won = true; burst(p.x + 3, p.y, COLORS.shard, 40); }
+}
+
+// ---------- drawing ----------
+function drawTile(x, y, c) {
+  const px = x * T, py = y * T;
+  if (c === "#") {
+    g.fillStyle = COLORS.stone; g.fillRect(px, py, T, T);
+    g.fillStyle = COLORS.stoneDark;
+    g.fillRect(px, py + 3, T, 1); g.fillRect(px + (y % 2 ? 2 : 6), py, 1, 3); g.fillRect(px + (y % 2 ? 5 : 1), py + 4, 1, 4);
+    if (y > 0 && grid[y - 1][x] !== "#") { g.fillStyle = COLORS.stoneTop; g.fillRect(px, py, T, 2); }
+  }
+  if (c === "^") {
+    g.fillStyle = COLORS.spike;
+    for (let i = 0; i < 2; i++) { g.beginPath(); g.moveTo(px + i * 4, py + T); g.lineTo(px + i * 4 + 2, py + 3); g.lineTo(px + i * 4 + 4, py + T); g.fill(); }
+  }
+  if (c === "G") {
+    const bob = Math.sin(timer / 12) * 1.5;
+    diamond(px + 4, py + 4 + bob, 4, COLORS.shard, "#008751");
+  }
+}
+function diamond(x, y, r, color, edge) {
+  g.fillStyle = edge; g.beginPath(); g.moveTo(x, y - r - 1); g.lineTo(x + r + 1, y); g.lineTo(x, y + r + 1); g.lineTo(x - r - 1, y); g.fill();
+  g.fillStyle = color; g.beginPath(); g.moveTo(x, y - r); g.lineTo(x + r, y); g.lineTo(x, y + r); g.lineTo(x - r, y); g.fill();
+  g.fillStyle = "#FFF6F0"; g.fillRect(x - 1, y - r + 2, 1, 2);
+}
+
+function drawPip() {
+  if (p.dead) return;
+  const x = Math.round(p.x), y = Math.round(p.y);
+  if (p.charged || p.runT > 0) { g.fillStyle = "rgba(0,231,86,.35)"; g.fillRect(x - 2, y - 2, p.w + 4, p.h + 4); }
+  g.fillStyle = "#008751"; g.fillRect(x, y, 6, 3);                       // cap
+  g.fillStyle = "#FFD6C2"; g.fillRect(x + 1, y + 3, 4, 3);               // face
+  g.fillStyle = "#1D1E26"; g.fillRect(x + (p.face > 0 ? 3 : 1), y + 4, 1, 1);
+  g.fillStyle = p.dash ? "#FF5E7E" : "#7AC7FF"; g.fillRect(x, y + 6, 6, 1);   // the scarf turns blue when the dash is used
+  g.fillRect(x + (p.face > 0 ? -2 : 6), y + 6 + (timer % 20 < 10 ? 0 : 1), 2, 1);
+  g.fillStyle = "#00E756"; g.fillRect(x + 1, y + 7, 4, 2);               // tunic
+  g.fillStyle = "#8A5A44"; g.fillRect(x + 1, y + 9, 1, 1); g.fillRect(x + 4, y + 9, 1, 1);
+}
+
+function draw() {
+  g.fillStyle = "#2B2D42"; g.fillRect(0, 0, 320, 176);
+  g.fillStyle = "#6B3E8C";
+  for (let i = 0; i < 12; i++) g.fillRect((i * 53 + 11) % 320, (i * 37 + 5) % 160, 1, 1);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) drawTile(x, y, grid[y][x]);
+  for (const c of crystals) {
+    if (c.wait > 0) { g.strokeStyle = "rgba(255,255,255,.25)"; g.strokeRect(c.x - 3, c.y - 3, 6, 6); continue; }
+    const bob = Math.sin(timer / 10 + c.x) * 1.5;
+    if (c.kind === "D") diamond(c.x, c.y + bob, 3, COLORS.ember, "#FF5E7E");
+    else { diamond(c.x, c.y + bob, 3, COLORS.crystal, "#008751"); g.fillStyle = "#008751"; g.fillRect(c.x - 1, c.y + bob - 1, 2, 3); }
+  }
+  for (const q of particles) { g.fillStyle = q.color; g.fillRect(Math.round(q.x), Math.round(q.y), 1, 1); }
+  drawPip();
+  g.fillStyle = "#B8BCCB"; g.font = "8px monospace";
+  g.fillText(`deaths ${deaths}   ${(timer / 60).toFixed(1)}s`, 6, 10);
+  if (won) {
+    g.fillStyle = "rgba(29,30,38,.85)"; g.fillRect(70, 70, 180, 36);
+    g.fillStyle = "#00E756"; g.font = "bold 10px monospace"; g.fillText("SHARD GET!", 128, 86);
+    g.fillStyle = "#B8BCCB"; g.font = "8px monospace"; g.fillText("R to play again", 124, 98);
+  }
+}
+
+let last = 0, spare = 0;
+function step() {
+  update();
+  for (const q of particles) { q.x += q.vx; q.y += q.vy; q.life--; }
+  particles = particles.filter(q => q.life > 0);
+  for (const k in pressed) delete pressed[k];
+}
+function frame(now) {
+  spare = Math.min(spare + (last ? now - last : 1000 / 60), 100);   // 60 steps a second, whatever the screen's refresh rate
+  last = now;
+  while (spare >= 1000 / 60) { step(); spare -= 1000 / 60; }
+  draw();
+  requestAnimationFrame(frame);
+}
+
+function fit() {
+  const s = Math.max(1, Math.floor(Math.min(innerWidth / 320, (innerHeight - 80) / 176)));
+  canvas.style.width = 320 * s + "px"; canvas.style.height = 176 * s + "px";
+}
+addEventListener("resize", fit);
+fit();
+reset();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

@@ -3,26 +3,44 @@
 // Space: dash, aimed with W A S D. Left click: swing (the yeti at the end needs it). Embers give the dash back. R: restart the level.
 
 var LEVELS = [
-    {"name": "1. THE MEADOW", "x": 0, "y": 0, "sx": 2, "sy": 13, "sky": 12},
-    {"name": "2. WINDY RIDGE", "x": 48, "y": 0, "sx": 2, "sy": 13, "sky": 12},
-    {"name": "3. SPRING WOODS", "x": 0, "y": 16, "sx": 2, "sy": 13, "sky": 9},
-    {"name": "4. FROZEN CAVES", "x": 48, "y": 16, "sx": 2, "sy": 12, "sky": 1},
-    {"name": "5. ICE FALLS", "x": 0, "y": 32, "sx": 2, "sy": 13, "sky": 1},
-    {"name": "6. CRYSTAL HOLLOW", "x": 48, "y": 32, "sx": 2, "sy": 11, "sky": 2},
-    {"name": "7. THE GLACIER", "x": 0, "y": 48, "sx": 2, "sy": 13, "sky": 1},
-    {"name": "8. THE SUMMIT", "x": 48, "y": 48, "sx": 1, "sy": 13, "sky": 13},
-    {"name": "9. THE YETI", "x": 96, "y": 0, "sx": 3, "sy": 13, "sky": 1, "w": 32, "boss": 1}
+    {"name": "1. THE MEADOW", "x": 0, "y": 0, "sx": 2, "sy": 13, "sky": 12, "w": 84, "h": 16},
+    {"name": "2. WINDY RIDGE", "x": 84, "y": 0, "sx": 2, "sy": 13, "sky": 12, "w": 84, "h": 16},
+    {"name": "3. SPRING WOODS", "x": 168, "y": 0, "sx": 2, "sy": 13, "sky": 9, "w": 84, "h": 16},
+    {"name": "4. FROZEN CAVES", "x": 0, "y": 16, "sx": 2, "sy": 12, "sky": 1, "w": 84, "h": 16},
+    {"name": "5. ICE FALLS", "x": 84, "y": 16, "sx": 2, "sy": 13, "sky": 1, "w": 84, "h": 16},
+    {"name": "6. CRYSTAL HOLLOW", "x": 168, "y": 16, "sx": 2, "sy": 11, "sky": 2, "w": 84, "h": 16},
+    {"name": "7. THE GLACIER", "x": 0, "y": 32, "sx": 2, "sy": 13, "sky": 1, "w": 84, "h": 16},
+    {"name": "8. THE SUMMIT", "x": 84, "y": 32, "sx": 1, "sy": 13, "sky": 13, "w": 84, "h": 16},
+    {"name": "9. THE YETI", "x": 168, "y": 32, "sx": 3, "sy": 13, "sky": 1, "w": 60, "boss": 1, "h": 16}
+]
+var HUB = -1     // no mountain hub: the levels come one after another
+var BOSS = 8
+var TOTAL = 9
+var DOORS = [
+    
+]
+var GATES = [
+    
+]
+var INTRO = [
+    "LONG AGO THE EMERALD HEART KEPT THE MOUNTAIN GREEN AND WARM.",
+    "THE VALLEY FOLK SAID IT BEAT ONCE A YEAR. AND EVERY TIME IT DID. SPRING CAME.",
+    "BUT THIS YEAR SPRING NEVER CAME. THE RIVERS FROZE. THE FIELDS WENT GREY.",
+    "PIP HAD JUST TURNED EIGHTEEN. HE HAD NEVER CLIMBED HIGHER THAN THE SHEEP FIELDS.",
+    "BRAM: PIP! THE HEART HAS CRACKED. I SAW THE PIECES FLY UP THE MOUNTAIN.",
+    "BRAM: NINE GREEN LIGHTS. LIKE SHOOTING STARS GOING THE WRONG WAY.",
+    "BRAM: MY KNEES ARE TOO OLD FOR CLIMBING. TAKE MY RED SCARF. NOW GO!",
+    "AT THE EDGE OF THE VILLAGE. BRAE WAS LEANING ON THE FENCE. LIKE SHE HAD BEEN WAITING FOR HIM.",
+    "BRAE: CLIMBING A FROZEN MOUNTAIN ALONE? THAT IS EITHER VERY BRAVE OR VERY SILLY.",
+    "BRAE: THE SCARF SUITS YOU. COME BACK IN ONE PIECE. I HAVE NOT FINISHED TEASING YOU YET.",
+    "BRAE: OH. AND PIP? I HAVE ALWAYS HAD A SOFT SPOT FOR SOMEONE WHO WEARS GREEN.",
+    "PIP LOOKED DOWN AT HIS GREEN TUNIC. THEN AT HIS GREEN CAP. THEN BACK AT BRAE.",
+    "PIP WENT RED. BRAE LAUGHED ALL THE WAY HOME."
 ]
 var STORY = [
-    ["LONG AGO THE EMERALD HEART KEPT THE MOUNTAIN GREEN AND WARM.",
-     "THE VALLEY FOLK SAID IT BEAT ONCE A YEAR. AND EVERY TIME IT DID. SPRING CAME.",
-     "BUT THIS YEAR SPRING NEVER CAME. THE RIVERS FROZE. THE FIELDS WENT GREY.",
-     "BRAM: PIP! THE HEART HAS CRACKED. I SAW THE PIECES FLY UP THE MOUNTAIN.",
-     "BRAM: NINE GREEN LIGHTS. LIKE SHOOTING STARS GOING THE WRONG WAY.",
-     "BRAM: MY KNEES ARE TOO OLD FOR CLIMBING. BUT YOURS ARE NOT.",
-     "BRAM: TAKE MY RED SCARF. IT WILL KEEP YOU WARM. NOW GO!",
-     "A AND D TO RUN. W TO JUMP. HOLD IT TO JUMP HIGHER."],
-    ["THE FIRST SHARD IS WARM IN PIPS HANDS. EIGHT MORE TO GO.",
+    ["THE MEADOW. A GOOD PLACE TO START.",
+     "HOLD W TO JUMP HIGHER. GRAB THE SHARD AT THE END."],
+    ["UP ON THE RIDGE.",
      "ON THE RIDGE THE WIND HOWLS. THE GAPS ARE FAR TOO WIDE TO JUMP.",
      "BRAM (FAR BELOW): USE THE SCARF! IT REMEMBERS THE HEART. IT WILL CARRY YOU!",
      "PRESS Q TO DASH. AIM WITH W A S D.",
@@ -30,18 +48,21 @@ var STORY = [
     ["THE WOODS ARE QUIET. TOO QUIET. EVEN THE BIRDS HAVE GONE.",
      "SOMEONE HAS LEFT RED SPRINGS ALL OVER THE PATH. WHO WOULD DO THAT?",
      "RED SPRINGS THROW YOU HIGH. JUMP AT A WALL IN THE AIR TO KICK OFF IT.",
-     "SANDY BLOCKS CRUMBLE WHEN YOU STAND ON THEM. DO NOT WAIT AROUND."],
+     "SANDY BLOCKS CRUMBLE WHEN YOU STAND ON THEM. DO NOT WAIT AROUND.",
+     "CRACKED ICE SHATTERS WHEN YOU HIT IT. IN THE AIR. HOLD S AND CLICK TO GROUND POUND."],
     ["THE PATH DIVES UNDER THE ICE. IT IS SO COLD THAT PIPS BREATH HANGS IN THE AIR.",
      "A VOICE ECHOES IN THE DARK: WHO GOES THERE?",
-     "A SNOWY OWL DROPS DOWN. WREN: A CHILD? UP HERE? YOU MUST BE AFTER THE SHARDS.",
+     "A SNOWY OWL DROPS DOWN. WREN: A TRAVELLER? UP HERE? YOU MUST BE AFTER THE SHARDS.",
      "WREN: FOUR OF THEM FELL DEEP INTO THE ICE. I WILL SHOW YOU THE WAY.",
-     "WREN: MIND THE CEILING. THE ICE HAS TEETH."],
+     "WREN: MIND THE CEILING. THE ICE HAS TEETH.",
+     "WREN: ICE BATS SWOOP WHEN YOU GET CLOSE. PRESS E TO THROW AN EMBER BOLT."],
     ["WREN: THESE ARE THE ICE FALLS. THE FLOOR IS AS SLICK AS GLASS.",
      "WREN: YOU WILL SLIDE. START RUNNING EARLY. STOP EARLY.",
      "WREN: AND LISTEN FOR CRACKING ABOVE YOU.",
      "WREN: ICICLES FALL WHEN SOMETHING WARM WALKS UNDER THEM.",
      "PIP: SOMETHING WARM?",
-     "WREN: YOU. KEEP MOVING."],
+     "WREN: YOU. KEEP MOVING.",
+     "WREN: SNOW SPRITES POP WITH ONE SWING. LEFT CLICK. CLICK THREE TIMES FAST FOR A COMBO."],
     ["WREN: THE CRYSTAL HOLLOW. THE HEARTS WARMTH STILL FLOATS HERE AS EMBERS.",
      "WREN: THERE IS NO FLOOR HERE. ONLY SPIKES.",
      "WREN: YOU WILL HAVE TO FLY FROM EMBER TO EMBER.",
@@ -55,6 +76,9 @@ var STORY = [
      "WREN: SO IT BROKE ITS OWN HEART...",
      "WREN: ...AND HID THE PIECES WHERE ONLY SOMEONE WHO CARED WOULD GO.",
      "PIP: THEN I WILL GO ALL THE WAY UP. AND I WILL SAY IT.",
+     "WREN: ...AND SOMEONE IN THE VALLEY IS WAITING FOR YOU. YOU KEEP LOOKING BACK DOWN.",
+     "PIP: NO I DO NOT.",
+     "WREN: HOO. YOU ARE DOING IT RIGHT NOW.",
      "WREN: THEN HURRY. THE GLACIER IS CRACKING."],
     ["THE SUMMIT. THE WIND IS LOUD AND THE SNOW IS DEEP. ANOTHER SHARD SHINES ABOVE.",
      "WREN: I CAN NOT FLY IN THIS WIND. FROM HERE YOU GO ALONE.",
@@ -66,21 +90,11 @@ var STORY = [
      "WREN (FAR AWAY): PIP! THE SHARD HAS MADE IT WILD!",
      "WREN: FREE THE SHARD AND YOU FREE THE YETI!",
      "WHEN IT FALLS OR CRASHES INTO A WALL IT IS DIZZY. THAT IS WHEN YOU STRIKE.",
-     "LEFT CLICK TO SWING AT THE SHARD. JUMP OVER THE SHOCKWAVES."]
-]
-var ENDING = [
-    "THE YETI BLINKS. ITS EYES ARE GENTLE NOW. IT LOOKS CONFUSED. AND VERY FLUFFY.",
-    "THE NINE SHARDS CLICK TOGETHER IN PIPS HANDS. THE HEART BEATS ONCE.",
-    "PIP: THANK YOU. MOUNTAIN. FOR EVERY SPRING.",
-    "THE HEART BEATS AGAIN. LOUDER. THE SNOW AROUND PIP MELTS INTO WATER.",
-    "WARMTH ROLLS DOWN THE SLOPES. THE GLACIER SIGHS. THE RIVERS START TO RUN.",
-    "FAR BELOW. BRAM FEELS THE SUN ON HIS FACE. AND LAUGHS.",
-    "WREN: YOU DID IT. AND THE MOUNTAIN HEARD YOU.",
-    "FROM THAT YEAR ON. THE VALLEY CLIMBED THE MOUNTAIN EVERY SPRING. TO SAY THANK YOU.",
-    "THE END."
+     "SWING. STOMP. DASH INTO IT. EMBER BOLTS CAN EVEN STOP IT MID ATTACK.",
+     "IT GETS ANGRIER AS IT GETS HURT. WATCH FOR ITS ICE BREATH."]
 ]
 var RUN = [2, 3, 4, 3]
-var BERRIES = 19
+var BERRIES = 34
 var W = 48
 var H = 16
 var SW = 228          // the screen is wide (widescreen): 228 x 128
@@ -116,6 +130,24 @@ var broken = []
 var crystals = []
 var springs = []
 var icicles = []
+// wall crystals: grab one and Pip runs straight up the next wall he touches
+var wallGems = []
+var wallCharge = false
+var wallRun = 0
+// the Complete Edition: the mountain, enemies and combat
+var hubPX = -1
+var hubPY = 0
+var done = []
+var seen = []
+var enemies = []
+var enemySpawns = []
+var smashed = []
+var bolts = []
+var combo = 0
+var lastSwing = -1
+var pounding = false
+var shootCool = 0
+var camy = 0
 var scarf = []
 var snow = []
 
@@ -166,6 +198,15 @@ func touched(f) {
     }
     return none
 }
+// the same, for a tile with no flag of its own (the flags are all used up)
+func touchedTile(n) {
+    for c in [[1, 2], [4, 2], [1, 10], [4, 10], [2, 6]] {
+        var x = px + c[0]
+        var y = py + c[1]
+        if tileAt(x, y) == n { return {"x": flr(x / 8), "y": flr(y / 8)} }
+    }
+    return none
+}
 
 // ---------- levels ----------
 
@@ -173,21 +214,76 @@ func startGame() {
     shards = 0
     berries = 0
     deaths = 0
+    done = []
+    seen = []
+    hubPX = -1
     level = 0
     mode = "play"
     startTime = t()
     startLevel()
-    lines = copy(STORY[0])
+    lines = copy(INTRO)
+    for s in STORY[0] { push(lines, s) }
+}
+
+func isHub() { return level == HUB }
+
+// leaves a level for the mountain, standing where Pip went in
+func returnToHub() {
+    resetTiles()
+    level = HUB
+    startLevel()
+    for g in GATES {
+        if shards == g["need"] and len(lines) == 0 {
+            lines = ["AN ICE GATE MELTS SOMEWHERE ON THE MOUNTAIN!"]
+        }
+    }
+}
+
+// the door Pip is standing in front of, or none
+func doorHere() {
+    for d in DOORS {
+        if abs(d["x"] * 8 + 4 - (px + 3)) < 7 and abs((d["y"] + 1) * 8 - (py + 12)) < 3 { return d }
+    }
+    return none
+}
+
+func enterDoor(d) {
+    if d["level"] == BOSS and shards < TOTAL - 1 {
+        if len(lines) == 0 { lines = ["THE YETI WAITS BEYOND THIS DOOR. FIND EVERY OTHER SHARD FIRST."] }
+        return
+    }
+    hubPX = d["x"] * 8 + 1
+    hubPY = (d["y"] + 1) * 8 - 12
+    resetTiles()
+    level = d["level"]
+    startLevel()
+    play(5)
+    if not contains(seen, level) {
+        push(seen, level)
+        lines = copy(STORY[level])
+    }
 }
 
 // puts back the crumbled blocks, used crystals and springs of this level
 func resetTiles() {
     for b in broken { setTile(b["x"], b["y"], 102) }
     for c in crystals { setTile(c["x"], c["y"], 107) }
+    for c in wallGems { setTile(c["x"], c["y"], 161) }
     for s in springs { setTile(s["x"], s["y"], 100) }
     for i in icicles { setTile(i["x"], i["y"], 144) }
+    for e in enemySpawns { setTile(e["x"], e["y"], e["tile"]) }
+    for s in smashed { setTile(s["x"], s["y"], 153) }
+    enemySpawns = []
+    smashed = []
+    enemies = []
+    bolts = []
+    corpses = []
+    sparks = []
+    pops = []
+    streak = 0
     broken = []
     crystals = []
+    wallGems = []
     springs = []
     icicles = []
 }
@@ -197,25 +293,44 @@ func startLevel() {
     var L = LEVELS[level]
     W = 48
     if has(L, "w") { W = L["w"] }
+    H = 16
+    if has(L, "h") { H = L["h"] }
     if isBoss() { initBoss() }
+    if isHub() {
+        for g in GATES { setTile(g["x"], g["y"], shards >= g["need"] ? 0 : 152) }
+    }
     // find the icicles that can fall
     var ty = 0
     while ty < H {
         var tx = 0
         while tx < W {
-            if mget(L["x"] + tx, L["y"] + ty) == 144 { push(icicles, {"x": tx, "y": ty, "state": 0, "t": 0, "fy": ty * 8, "v": 0}) }
+            var here = mget(L["x"] + tx, L["y"] + ty)
+            if here == 144 { push(icicles, {"x": tx, "y": ty, "state": 0, "t": 0, "fy": ty * 8, "v": 0}) }
+            if here == 156 or here == 158 {
+                // enemies: their marker tiles come off the map while they're out walking and flying
+                push(enemySpawns, {"x": tx, "y": ty, "tile": here})
+                push(enemies, {"kind": here == 156 ? "walker" : "bat", "x": tx * 8, "y": ty * 8, "hx": tx * 8, "hy": ty * 8, "vx": 0.4, "t": rnd(60), "alive": true})
+                setTile(tx, ty, 0)
+            }
             tx += 1
         }
         ty += 1
     }
     px = L["sx"] * 8 + 1
     py = L["sy"] * 8 - 12
+    if isHub() and hubPX >= 0 {
+        px = hubPX
+        py = hubPY
+    }
+    pounding = false
     vx = 0
     vy = 0
     facing = 1
     canDash = true
     dashTime = 0
     wallLock = 0
+    wallCharge = false
+    wallRun = 0
     dead = 0
     levelTime = 0
     for s in scarf {
@@ -234,7 +349,6 @@ func nextLevel() {
         pageTime = 0
         finishTime = t() - startTime
         if dget(0) == 0 or finishTime < dget(0) { dset(0, finishTime) }
-        lines = copy(ENDING)
         return
     }
     startLevel()
@@ -243,7 +357,7 @@ func nextLevel() {
 
 func die() {
     if dead > 0 { return }
-    if false {
+    if god {
         // never die: bounce back out of pits instead
         if py > H * 8 - 16 {
             py = H * 8 - 24
@@ -267,9 +381,17 @@ func update() {
         updateSettings()
         return
     }
+    if mode == "cheats" {
+        updateCheats()
+        return
+    }
     if mode == "title" {
         if keyp("p") {
             openSettings("title")
+            return
+        }
+        if keyp("f1") {
+            openCheats("title")
             return
         }
         updateTitle()
@@ -307,7 +429,7 @@ func update() {
     updateTiles()
     if won > 0 {
         won -= 1
-        if won == 0 { nextLevel() }
+        if won == 0 { nextLevel() }   // (after the yeti, the last level: the ending)
         return
     }
     if dead > 0 {
@@ -323,7 +445,26 @@ func update() {
         openSettings("play")
         return
     }
+    if keyp("f1") {
+        openCheats("play")
+        return
+    }
+    if isHub() {
+        var n = npcHere()
+        if n != none and (btnp(3) or hit("down")) and grounded {
+            lines = npcTalk(n)
+            return
+        }
+        var d = doorHere()
+        if d != none and (btnp(3) or hit("down")) and grounded {
+            enterDoor(d)
+            return
+        }
+    }
     updatePip()
+    updateEnemies()
+    updateBolts()
+    updateHitFx()
     if isBoss() { updateBoss() }
 }
 
@@ -353,7 +494,16 @@ func updateTiles() {
             c["t"] -= 1
             if c["t"] == 0 {
                 setTile(c["x"], c["y"], 107)
-                burst(c["x"] * 8 + 4, c["y"] * 8 + 3, 6, 9, 0.5)
+                burst(c["x"] * 8 + 4, c["y"] * 8 + 3, 6, 14, 0.5)
+            }
+        }
+    }
+    for c in wallGems {
+        if c["t"] > 0 {
+            c["t"] -= 1
+            if c["t"] == 0 {
+                setTile(c["x"], c["y"], 161)
+                burst(c["x"] * 8 + 4, c["y"] * 8 + 3, 6, 11, 0.5)
             }
         }
     }
@@ -422,12 +572,35 @@ func updatePip() {
     // left click: swing
     if atkCool > 0 { atkCool -= 1 }
     if atkTime > 0 { atkTime -= 1 }
+    if shootCool > 0 { shootCool -= 1 }
     if hit("swing") and atkCool == 0 {
-        atkTime = 8
-        atkCool = 14
-        play(2)
-        burst(px + 3 + facing * 9, py + 6, 4, 7, 0.8)
-        if isBoss() { strike() }
+        if not grounded and not pounding and (btn(3) or held("down")) {
+            // ground pound: straight down, hard
+            pounding = true
+            dashTime = 0
+            vx = 0
+            vy = 5
+            play(1)
+        } else if not pounding {
+            // a three hit combo: click again quickly to keep it going; the third hit lunges and hits hardest
+            combo = t() - lastSwing < 0.5 ? combo % 3 + 1 : 1
+            lastSwing = t()
+            atkTime = 8
+            atkCool = combo == 3 ? 18 : 9
+            if combo == 3 {
+                vx = facing * 2.5
+                shake(2)
+            }
+            play(2)
+            burst(px + 3 + facing * 9, py + 6, 4, combo == 3 ? 10 : 7, 0.8)
+            swingHits(combo == 3 ? 14 : 10)
+            if isBoss() { strike(combo == 3 ? 2 : 1) }
+        }
+    }
+    if hit("shoot") and shootCool == 0 {
+        push(bolts, {"x": px + 3 + facing * 6, "y": py + 5, "vx": facing * 4, "life": 70})
+        shootCool = 24
+        play(1)
     }
 
     grounded = vy >= 0 and (solidAt(px, py + 12) or solidAt(px + 5, py + 12) or onLedge())
@@ -435,6 +608,7 @@ func updatePip() {
         coyote = 6
         if dashTime == 0 { canDash = true }
     }
+    if infDash and dashTime == 0 { canDash = true }
     if grounded {
         if flagAt(px + 1, py + 12, 7) { crumble(flr((px + 1) / 8), flr((py + 12) / 8)) }
         if flagAt(px + 4, py + 12, 7) { crumble(flr((px + 4) / 8), flr((py + 12) / 8)) }
@@ -448,6 +622,15 @@ func updatePip() {
         } else if hitsSolid(px - 1, py) {
             wall = -1
         }
+    }
+    if grounded { wallRun = 0 }
+    if wallCharge and wall != 0 and dashTime == 0 {
+        // the wall crystal kicks in: up the wall
+        wallCharge = false
+        wallRun = 60
+        facing = wall
+        play(1)
+        burst(px + 3, py + 6, 10, 11, 0.8)
     }
 
     // jumping: off the ground (a moment after leaving it still counts), or off a wall
@@ -463,6 +646,7 @@ func updatePip() {
             vx = -wall * 2.2
             facing = -wall
             wallLock = 10
+            wallRun = 0
             buffer = 0
             play(0)
             burst(px + 3 + wall * 3, py + 8, 5, 6, 0.6)
@@ -485,6 +669,7 @@ func updatePip() {
         dashTime = 9
         canDash = false
         wallLock = 0
+        wallRun = 0
         shake(2)
         play(1)
         burst(px + 3, py + 6, 8, 9, 1)
@@ -496,6 +681,17 @@ func updatePip() {
         if dashTime == 0 {
             vx = vx * 0.5
             vy = vy * 0.5
+        }
+    } else if wallRun > 0 {
+        // running up the wall; over the top, a little hop on to it
+        wallRun -= 1
+        vy = -2.4
+        vx = wall * 0.5
+        if wallRun % 3 == 0 { burst(px + 3 + wall * 3, py + 11, 1, 11, 0.3) }
+        if wall == 0 {
+            wallRun = 0
+            vy = -1.8
+            vx = facing * 1.2
         }
     } else {
         if dx != 0 and wallLock == 0 { facing = dx }
@@ -516,8 +712,14 @@ func updatePip() {
         vy = min(vy, 3.6)
     }
 
+    if pounding {
+        vx = 0
+        vy = 5
+        dashTime = 0
+    }
     if moveX(vx) { vx = 0 }
     moveY(vy)
+    if pounding and vy == 0 { poundLand() }
 
     if grounded and abs(vx) > 0.3 { steps += 1 } else { steps = 0 }
 
@@ -544,7 +746,15 @@ func updatePip() {
         setTile(c["x"], c["y"], 108)
         push(crystals, {"x": c["x"], "y": c["y"], "t": 150})
         play(3)
-        burst(c["x"] * 8 + 4, c["y"] * 8 + 3, 10, 10, 1)
+        burst(c["x"] * 8 + 4, c["y"] * 8 + 3, 10, 14, 1)
+    }
+    var wg = touchedTile(161)
+    if wg != none and not wallCharge and wallRun == 0 {
+        wallCharge = true
+        setTile(wg["x"], wg["y"], 162)
+        push(wallGems, {"x": wg["x"], "y": wg["y"], "t": 120})
+        play(3)
+        burst(wg["x"] * 8 + 4, wg["y"] * 8 + 3, 10, 11, 1)
     }
     var b = touched(2)
     if b != none {
@@ -572,6 +782,241 @@ func updatePip() {
         p["y"] += (hy - p["y"]) * 0.45
         hx = p["x"] - facing * 1.2
         hy = p["y"] + 0.4 + sin(t() * 9 + hx) * 0.3
+    }
+}
+
+// ---------- combat ----------
+
+// a cracked ice tile at this spot shatters
+func smashAt(x, y) {
+    if tileAt(x, y) != 153 { return false }
+    var tx = flr(x / 8)
+    var ty = flr(y / 8)
+    setTile(tx, ty, 0)
+    push(smashed, {"x": tx, "y": ty})
+    burst(tx * 8 + 4, ty * 8 + 4, 12, 12, 1.2)
+    burst(tx * 8 + 4, ty * 8 + 4, 6, 7, 0.8)
+    play(4)
+    return true
+}
+
+// the sword's reach: enemies and cracked ice in front of Pip
+func swingHits(reach) {
+    var x0 = px + 3
+    var x1 = px + 3 + facing * reach
+    for e in enemies {
+        var ex = e["x"] + 4
+        if e["alive"] and (ex - x0) * facing > -3 and (ex - x1) * facing < 4 and abs(e["y"] + 4 - (py + 6)) < 12 { killEnemy(e) }
+    }
+    var k = 4
+    while k <= reach {
+        smashAt(px + 3 + facing * k, py + 2)
+        smashAt(px + 3 + facing * k, py + 10)
+        k += 4
+    }
+}
+
+func poundLand() {
+    pounding = false
+    shake(5)
+    play(4)
+    burst(px + 3, py + 12, 20, 7, 1.6)
+    burst(px + 3, py + 12, 10, 6, 1)
+    var hit = false
+    for dxs in [-6, 1, 4, 11] {
+        if smashAt(px + dxs, py + 13) { hit = true }
+    }
+    for e in enemies {
+        if e["alive"] and abs(e["x"] + 4 - (px + 3)) < 22 and abs(e["y"] + 4 - (py + 8)) < 14 { killEnemy(e) }
+    }
+    if isBoss() and bstate == "stunned" and abs(headX() - (px + 3)) < 18 and abs(headY() - (py + 12)) < 18 { hurtBoss(2) }
+    vy = hit ? 1 : -1.5   // a little bounce off solid ground
+}
+
+// ---------- what a hit feels like: a freeze, a white flash, knockback, a star, and a combo count ----------
+var corpses = []
+var sparks = []
+var pops = []
+var streak = 0
+var streakTime = 0
+
+func killEnemy(e) {
+    e["alive"] = false
+    var away = sign(e["x"] + 4 - (px + 3))
+    if away == 0 { away = facing }
+    var big = combo == 3 and atkTime > 0
+    hitstop = max(hitstop, big ? 7 : 4)
+    shake(big ? 3 : 2)
+    play(4)
+    // it flies off backwards, flashing, and pops a moment later
+    push(corpses, {"x": e["x"], "y": e["y"], "vx": away * (big ? 3 : 2.2), "vy": -2.6, "t": 24,
+                   "s": e["kind"] == "bat" ? 158 : 156, "flip": away < 0, "c": e["kind"] == "bat" ? 12 : 7})
+    push(sparks, {"x": e["x"] + 4, "y": e["y"] + 4, "t": 6})
+    // kills close together count up
+    streak = streakTime > 0 ? streak + 1 : 1
+    streakTime = 90
+    if streak > 1 { push(pops, {"x": e["x"] + 4, "y": e["y"] - 4, "t": 40, "text": "X" + streak + "!"}) }
+    canDash = true     // hitting things gives the dash back
+}
+
+func updateHitFx() {
+    for c in corpses {
+        c["x"] += c["vx"]
+        c["y"] += c["vy"]
+        c["vy"] += 0.3
+        c["vx"] *= 0.95
+        c["t"] -= 1
+        if c["t"] == 0 {
+            burst(c["x"] + 4, c["y"] + 4, 14, c["c"], 1.3)
+            burst(c["x"] + 4, c["y"] + 4, 6, 7, 0.8)
+        }
+    }
+    corpses = filter(corpses, func(c) { return c["t"] > 0 })
+    for s in sparks { s["t"] -= 1 }
+    sparks = filter(sparks, func(s) { return s["t"] > 0 })
+    for p in pops {
+        p["y"] -= 0.4
+        p["t"] -= 1
+    }
+    pops = filter(pops, func(p) { return p["t"] > 0 })
+    if streakTime > 0 { streakTime -= 1 }
+}
+
+func drawHitFx() {
+    for c in corpses {
+        if c["t"] > 18 {
+            var k = 1
+            while k < 16 {          // all white for the first few frames
+                pal(k, 7)
+                k += 1
+            }
+            spr(c["s"], c["x"], c["y"], 1, 1, c["flip"])
+            pal()
+        } else if c["t"] % 4 < 2 {
+            spr(c["s"], c["x"], c["y"], 1, 1, c["flip"])
+        }
+    }
+    for s in sparks {
+        // an impact star, opening out
+        var r = 8 - s["t"]
+        line(s["x"] - r, s["y"], s["x"] + r, s["y"], 7)
+        line(s["x"], s["y"] - r, s["x"], s["y"] + r, 7)
+        line(s["x"] - r / 2, s["y"] - r / 2, s["x"] + r / 2, s["y"] + r / 2, 10)
+        line(s["x"] - r / 2, s["y"] + r / 2, s["x"] + r / 2, s["y"] - r / 2, 10)
+    }
+    for p in pops {
+        var x = p["x"] - len(p["text"]) * 2
+        print(p["text"], x + 1, p["y"] + 1, 1)
+        print(p["text"], x, p["y"], flr(p["t"] / 3) % 2 == 0 ? 10 : 7)
+    }
+}
+
+func updateEnemies() {
+    for e in enemies {
+        if not e["alive"] { continue }
+        e["t"] += 1
+        if e["kind"] == "walker" {
+            // walks along, turning at walls and edges
+            var nx = e["x"] + e["vx"]
+            var ahead = e["vx"] > 0 ? nx + 8 : nx - 1
+            if solidAt(ahead, e["y"] + 4) or not solidAt(ahead, e["y"] + 9) {
+                e["vx"] = -e["vx"]
+            } else {
+                e["x"] = nx
+            }
+        } else {
+            // bats: bob around home; swoop at Pip when close
+            var dx = px + 3 - (e["x"] + 4)
+            var dy = py + 6 - (e["y"] + 4)
+            if abs(dx) < 44 and abs(dy) < 40 and dead == 0 {
+                e["x"] += sign(dx) * 0.55
+                e["y"] += sign(dy) * 0.45
+            } else {
+                e["x"] += (e["hx"] - e["x"]) * 0.03
+                e["y"] += (e["hy"] + sin(e["t"] * 0.08) * 6 - e["y"]) * 0.1
+            }
+        }
+        if dead == 0 and abs(e["x"] + 4 - (px + 3)) < 7 and abs(e["y"] + 4 - (py + 6)) < 9 {
+            if pounding {
+                // a pogo: pounding on to an enemy bounces Pip back up, dash and all
+                killEnemy(e)
+                pounding = false
+                vy = -4.2
+                canDash = true
+                burst(px + 3, py + 12, 8, 7, 1)
+            } else if dashTime > 0 {
+                killEnemy(e)
+            } else {
+                die()
+            }
+        }
+    }
+}
+
+func updateBolts() {
+    for b in bolts {
+        b["x"] += b["vx"]
+        b["life"] -= 1
+        if b["life"] % 2 == 0 { burst(b["x"], b["y"], 1, pick([9, 10]), 0.3) }
+        if solidAt(b["x"], b["y"]) {
+            smashAt(b["x"], b["y"])
+            burst(b["x"], b["y"], 6, 9, 0.8)
+            b["life"] = 0
+        }
+        for e in enemies {
+            if e["alive"] and b["life"] > 0 and abs(e["x"] + 4 - b["x"]) < 6 and abs(e["y"] + 4 - b["y"]) < 6 {
+                killEnemy(e)
+                b["life"] = 0
+            }
+        }
+        if isBoss() and b["life"] > 0 and abs(b["x"] - headX()) < 12 and abs(b["y"] - headY()) < 14 {
+            boltHitBoss()
+            b["life"] = 0
+        }
+    }
+    bolts = filter(bolts, func(b) { return b["life"] > 0 })
+}
+
+func drawEnemies() {
+    for e in enemies {
+        if not e["alive"] { continue }
+        if e["kind"] == "walker" {
+            spr(156 + flr(e["t"] / 10) % 2, e["x"], e["y"], 1, 1, e["vx"] < 0)
+        } else {
+            spr(158 + flr(e["t"] / 6) % 2, e["x"], e["y"])
+        }
+    }
+    for b in bolts { spr(160, b["x"] - 4, b["y"] - 3, 1, 1, b["vx"] < 0) }
+    drawHitFx()
+}
+
+// the mountain's doors: the level's name and S when Pip is in front, a shard over finished ones, locks
+func drawDoors() {
+    if not isHub() { return }
+    var here = doorHere()
+    for d in DOORS {
+        var x = d["x"] * 8
+        var y = d["y"] * 8
+        if contains(done, d["level"]) { spr(109, x, y - 18 + sin(t() * 3 + x) * 1.5) }
+        if d["level"] == BOSS and shards < TOTAL - 1 {
+            rectfill(x + 2, y - 4, x + 5, y - 1, 5)
+            rect(x + 1, y - 7, x + 6, y - 3, 6)
+        }
+        if here == d {
+            var name = LEVELS[d["level"]]["name"]
+            rectfill(x + 4 - len(name) * 2 - 2, y - 30, x + 4 + len(name) * 2, y - 22, 1)
+            print(name, x + 4 - len(name) * 2, y - 28, 7)
+            if flr(t() * 3) % 2 == 0 { print("S", x + 2, y - 16, 10) }
+        }
+    }
+    // gates say how many shards they need
+    for g in GATES {
+        if shards < g["need"] and abs(g["x"] * 8 + 4 - (px + 3)) < 26 and abs(g["y"] * 8 - py) < 26 {
+            var msg = "NEEDS " + g["need"] + " SHARDS"
+            rectfill(g["x"] * 8 + 4 - len(msg) * 2 - 2, g["y"] * 8 - 12, g["x"] * 8 + 4 + len(msg) * 2, g["y"] * 8 - 4, 1)
+            print(msg, g["x"] * 8 + 4 - len(msg) * 2, g["y"] * 8 - 10, 12)
+            break
+        }
     }
 }
 
@@ -620,15 +1065,15 @@ func moveY(amount) {
 // ---------- settings ----------
 
 var KEYS = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "space", "enter", "shift", "up", "down", "left", "right", "click"]
-var ACTIONS = [["LEFT", "left"], ["RIGHT", "right"], ["JUMP", "jump"], ["DOWN", "down"], ["DASH", "dash"], ["SWING", "swing"]]
-var binds = {"left": "a", "right": "d", "jump": "w", "down": "s", "dash": "q", "swing": "click"}
+var ACTIONS = [["LEFT", "left"], ["RIGHT", "right"], ["JUMP", "jump"], ["DOWN", "down"], ["DASH", "dash"], ["SWING", "swing"], ["EMBER BOLT", "shoot"]]
+var binds = {"left": "a", "right": "d", "jump": "w", "down": "s", "dash": "q", "swing": "click", "shoot": "e"}
 var musicOn = true
 var sfxOn = true
 var menu = 0
 var waiting = false
 var backTo = "title"
 
-// cartdata slots: 0 best time, 1-6 keys, 7 music off, 8 sound off
+// cartdata slots: 0 best time, 1-7 keys, 9 music off, 10 sound off
 func loadSettings() {
     var i = 0
     while i < len(ACTIONS) {
@@ -636,8 +1081,8 @@ func loadSettings() {
         if v > 0 and v <= len(KEYS) { binds[ACTIONS[i][1]] = KEYS[v - 1] }
         i += 1
     }
-    musicOn = dget(7) == 0
-    sfxOn = dget(8) == 0
+    musicOn = dget(9) == 0
+    sfxOn = dget(10) == 0
 }
 
 func saveSettings() {
@@ -646,8 +1091,8 @@ func saveSettings() {
         dset(i + 1, indexOf(KEYS, binds[ACTIONS[i][1]]) + 1)
         i += 1
     }
-    dset(7, musicOn ? 0 : 1)
-    dset(8, sfxOn ? 0 : 1)
+    dset(9, musicOn ? 0 : 1)
+    dset(10, sfxOn ? 0 : 1)
 }
 
 func play(n) {
@@ -693,14 +1138,20 @@ func updateSettings() {
         }
         return
     }
-    if btnp(2) { menu = (menu + 8) % 9 }
-    if btnp(3) { menu = (menu + 1) % 9 }
+    if btnp(2) { menu = (menu + 9) % 10 }
+    if btnp(3) { menu = (menu + 1) % 10 }
     var my = mousey()
-    var onRow = mousex() - OX > 8 and mousex() - OX < 120 and my >= 22 and my < 22 + 9 * 10
-    if onRow and click() {
-        menu = flr((my - 22) / 10)
-        choose()
-        return
+    if click() and mousex() - OX > 8 and mousex() - OX < 120 {
+        var row = 0
+        while row < 10 {
+            var ry = settingsRowY(row)
+            if my >= ry - 2 and my < ry + 7 {
+                menu = row
+                choose()
+                return
+            }
+            row += 1
+        }
     }
     if keyp("enter") or btnp(4) { choose() }
     if keyp("p") {
@@ -709,14 +1160,22 @@ func updateSettings() {
     }
 }
 
+// where each settings row sits: 7 keys, then music and sound, then back
+func settingsRowY(i) {
+    var y = 21 + i * 8
+    if i >= 7 { y += 4 }
+    if i == 9 { y += 3 }
+    return y
+}
+
 func choose() {
-    if menu < 6 {
+    if menu < 7 {
         waiting = true
-    } else if menu == 6 {
+    } else if menu == 7 {
         musicOn = not musicOn
         startMusic()
         saveSettings()
-    } else if menu == 7 {
+    } else if menu == 8 {
         sfxOn = not sfxOn
         saveSettings()
         play(3)
@@ -737,20 +1196,18 @@ func drawSettings() {
     cls(1)
     menuCard("SETTINGS")
     var i = 0
-    while i < 9 {
-        var y = 24 + i * 9
-        if i >= 6 { y += 6 }
-        if i == 8 { y += 4 }
+    while i < 10 {
+        var y = settingsRowY(i)
         var label = "BACK"
         var value = ""
-        if i < 6 {
+        if i < 7 {
             label = ACTIONS[i][0]
             value = upper(binds[ACTIONS[i][1]])
             if waiting and menu == i { value = "PRESS..." }
-        } else if i == 6 {
+        } else if i == 7 {
             label = "MUSIC"
             value = musicOn ? "ON" : "OFF"
-        } else if i == 7 {
+        } else if i == 8 {
             label = "SOUND"
             value = sfxOn ? "ON" : "OFF"
         }
@@ -763,14 +1220,27 @@ func drawSettings() {
 // ---------- the epilogue: storybook pages in a gold frame ----------
 
 var EPILOGUE = [
+    "THE YETI BLINKS. ITS EYES ARE GENTLE NOW. IT LOOKS CONFUSED. AND VERY FLUFFY.",
+    "ALL NINE SHARDS CLICK TOGETHER IN PIPS HANDS. THE HEART BEATS ONCE.",
+    "PIP: THANK YOU. MOUNTAIN. FOR EVERY SPRING.",
+    "THE HEART BEATS AGAIN. LOUDER. THE SNOW AROUND PIP MELTS INTO WATER.",
+    "WARMTH ROLLS DOWN THE SLOPES. THE GLACIER SIGHS. THE RIVERS START TO RUN.",
+    "FAR BELOW. BRAM FEELS THE SUN ON HIS FACE. AND LAUGHS.",
+    "WREN: YOU DID IT. AND THE MOUNTAIN HEARD YOU.",
+    "THAT EVENING PIP WALKED DOWN TO THE WATERFALL. BRAE WAS WAITING. SHE HAD BEEN HOLDING SOMETHING ALL DAY.",
+    "BRAE: TOOK YOU LONG ENOUGH. I WAS STARTING TO THINK THE YETI HAD KEPT YOU.",
+    "A PINK FLOWER. THE FIRST OF THE SPRING. BRAE: I PICKED IT FOR YOU. IT MATCHES YOUR FACE WHEN YOU BLUSH.",
+    "PIP STOOD THERE HOLDING THE FLOWER. RED TO THE EARS. HE COULD NOT THINK OF A SINGLE WORD.",
+    "BRAE: SEE? JUST LIKE THAT.",
+    "SO BRAE STOOD ON HER TIPTOES AND KISSED HIM. RIGHT THERE BY THE WATERFALL. IN THE LAST OF THE SUNLIGHT.",
+    "THEN SHE WINKED. BRAE: THAT ONE WAS FOR SAVING SPRING. THE NEXT ONE YOU HAVE TO EARN.",
+    "BRAE: AND I TOLD YOU. I HAVE A SOFT SPOT FOR GREEN.",
     "AND LATER...",
     "SPRING CAME BACK. THE FIELDS WENT GREEN AND THE RIVERS RAN LOUD.",
-    "PIP AND HIS FRIEND BRAE SPENT THE WARM DAYS BY THE WATERFALL.",
+    "PIP AND BRAE SPENT THE WARM DAYS BY THE WATERFALL. TOGETHER.",
     "BRAM TOLD THE STORY TO ANYONE WHO WOULD SIT STILL LONG ENOUGH.",
     "THE YETI MOVED IN WITH WREN. TERRIBLE COOK. GREAT HUGGER.",
-    "UNTIL ONE EVENING... PIP AND BRAE LOOKED UP AT THE MOUNTAIN.",
-    "SOMETHING WAS LOOKING BACK.",
-    "THE END?"
+    "THE END."
 ]
 var page = 0
 var pageTime = 0
@@ -952,6 +1422,196 @@ func drawMountain() {
     }
 }
 
+// a menu: a framed card with a title tab
+func menuCard(title) {
+    rectfill(12, 14, 115, 110, 0)
+    rect(12, 14, 115, 110, 5)
+    rectfill(40, 8, 87, 18, 3)
+    rect(40, 8, 87, 18, 11)
+    print(title, 64 - len(title) * 2, 11, 7)
+}
+
+func menuRow(on, label, value, y) {
+    if on {
+        rectfill(15, y - 2, 112, y + 6, 3)
+        print(">", 17, y, 11)
+    }
+    print(label, 23, y, on ? 7 : 6)
+    print(value, 110 - len(value) * 4, y, on ? 10 : 13)
+}
+// ---------- Bram and Wren on the mountain ----------
+
+// where they stand (in the mountain's pixels) and which sprite they are
+var NPCS = [
+    {"who": "BRAM", "x": 28, "y": 344, "sprite": 40},
+    {"who": "WREN", "x": 420, "y": 224, "sprite": 42}
+]
+
+// who Pip is standing next to, or none
+func npcHere() {
+    if not isHub() { return none }
+    for n in NPCS {
+        if abs(n["x"] + 8 - (px + 3)) < 14 and abs(n["y"] + 16 - (py + 12)) < 10 { return n }
+    }
+    return none
+}
+
+// what they say, depending on how far Pip has got
+func npcTalk(n) {
+    if n["who"] == "BRAM" {
+        if shards == 0 {
+            return ["BRAM: EVERY DOOR ON THE MOUNTAIN HIDES A SHARD. START WITH THE ONES DOWN HERE.",
+                    "BRAM: THE ICE GATES MELT WHEN YOU CARRY ENOUGH SHARDS. THREE FOR THE FIRST ONE."]
+        }
+        if shards < 3 { return ["BRAM: " + shards + " SHARDS ALREADY! THE FIRST GATE NEEDS THREE. KEEP GOING."] }
+        if shards < 8 { return ["BRAM: THE FIRST GATE MELTED! CLIMB THE STEPS ON THE RIGHT.", "BRAM: WREN THE OWL LIVES UP THERE. SHE KNOWS THE ICE."] }
+        if shards < TOTAL - 1 { return ["BRAM: YOU ARE ALMOST AT THE TOP. I CAN SEE THE GREEN GLOW FROM HERE!"] }
+        return ["BRAM: SOMETHING BIG IS WAITING AT THE TOP. BE CAREFUL. PIP."]
+    }
+    if shards < 8 {
+        return ["WREN: HOO. A WARM ONE. SNOW SPRITES POP WITH ONE SWING.",
+                "WREN: THREE QUICK SWINGS MAKE A COMBO. THE LAST ONE LUNGES.",
+                "WREN: AND PRESS E TO THROW AN EMBER BOLT AT BATS."]
+    }
+    if shards < TOTAL - 1 {
+        return ["WREN: CRACKED ICE BREAKS. FROM THE AIR. HOLD S AND SWING TO GROUND POUND."]
+    }
+    return ["WREN: THE YETI IS ONLY HURT WHEN IT IS DIZZY. AFTER IT SLAMS DOWN OR HITS A WALL.",
+            "WREN: AN EMBER BOLT IN ITS FACE WILL STOP IT MID ATTACK. HOO."]
+}
+
+func drawNpcs() {
+    if not isHub() { return }
+    var here = npcHere()
+    for n in NPCS {
+        var bob = n["who"] == "WREN" ? flr(sin(t() * 2) * 1.5) : 0
+        spr(n["sprite"], n["x"], n["y"] + bob, 2, 2, px + 3 < n["x"] + 8)
+        if here == n {
+            rectfill(n["x"] + 8 - len(n["who"]) * 2 - 2, n["y"] - 12, n["x"] + 8 + len(n["who"]) * 2, n["y"] - 4, 1)
+            print(n["who"], n["x"] + 8 - len(n["who"]) * 2, n["y"] - 10, 7)
+            if flr(t() * 3) % 2 == 0 { print("S", n["x"] + 6, n["y"] - 20, 10) }
+        }
+    }
+}
+
+// ---------- cheats (F1) ----------
+
+var god = false
+var oneHit = false
+var infDash = false
+var cheatLevel = 0
+var cmenu = 0
+var cheatFrom = "title"
+var CHEAT_ROWS = 7
+var ORDER = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+
+func openCheats(from) {
+    cheatFrom = from
+    mode = "cheats"
+    cmenu = 0
+    cheatLevel = max(0, indexOf(ORDER, level))
+}
+
+func teleport(n) {
+    resetTiles()
+    if cheatFrom == "title" {
+        shards = 0
+        berries = 0
+        deaths = 0
+        done = []
+        seen = []
+        hubPX = -1
+        startTime = t()
+    }
+    level = n
+    mode = "play"
+    lines = []
+    freeze = 6
+    startLevel()
+}
+
+func updateCheats() {
+    if btnp(2) { cmenu = (cmenu + CHEAT_ROWS - 1) % CHEAT_ROWS }
+    if btnp(3) { cmenu = (cmenu + 1) % CHEAT_ROWS }
+    if cmenu == 0 {
+        if btnp(0) or keyp("a") { cheatLevel = (cheatLevel + len(ORDER) - 1) % len(ORDER) }
+        if btnp(1) or keyp("d") { cheatLevel = (cheatLevel + 1) % len(ORDER) }
+    }
+    var my = mousey()
+    if mousex() - OX > 8 and mousex() - OX < 120 and my >= 22 and my < 22 + CHEAT_ROWS * 11 and click() {
+        cmenu = flr((my - 22) / 11)
+        cheatChoose()
+        return
+    }
+    if keyp("enter") or btnp(4) { cheatChoose() }
+    if keyp("f1") {
+        mode = cheatFrom
+        freeze = 6
+    }
+}
+
+func cheatChoose() {
+    play(3)
+    if cmenu == 0 {
+        teleport(ORDER[cheatLevel])
+    } else if cmenu == 1 {
+        god = not god
+    } else if cmenu == 2 {
+        oneHit = not oneHit
+    } else if cmenu == 3 {
+        infDash = not infDash
+    } else if cmenu == 4 {
+        if cheatFrom == "play" {
+            mode = "play"
+            freeze = 4
+            if isBoss() and bstate != "dead" {
+                bhp = 0
+                bstate = "dying"
+                btimer = 1
+            } else if not isHub() {
+                shards += 1
+                push(done, level)
+                won = 1
+            }
+        }
+    } else if cmenu == 5 {
+        // every shard but the yeti's: all the gates open
+        shards = TOTAL - 1
+        done = []
+        var i = 0
+        while i < len(LEVELS) {
+            if i != BOSS and i != HUB { push(done, i) }
+            i += 1
+        }
+        if cheatFrom == "play" and isHub() {
+            for g in GATES { setTile(g["x"], g["y"], 0) }
+        }
+    } else {
+        mode = cheatFrom
+        freeze = 6
+    }
+}
+
+func drawCheats() {
+    cls(2)
+    menuCard("CHEATS")
+    var names = ["GO TO LEVEL", "NEVER DIE", "ONE HIT YETI", "ENDLESS DASH", "WIN LEVEL", "ALL SHARDS", "BACK"]
+    var i = 0
+    while i < CHEAT_ROWS {
+        var value = ""
+        if i == 0 { value = "< " + cheatLevel + " >" }
+        if i == 1 { value = god ? "ON" : "OFF" }
+        if i == 2 { value = oneHit ? "ON" : "OFF" }
+        if i == 3 { value = infDash ? "ON" : "OFF" }
+        if i == 5 { value = shards + "/" + TOTAL }
+        menuRow(i == cmenu, names[i], value, 24 + i * 11)
+        i += 1
+    }
+    var nm = LEVELS[ORDER[cheatLevel]]["name"]
+    print(nm, 64 - len(nm) * 2, 104, 11)
+    print("ARROWS. ENTER OR CLICK. F1 BACK", 2, 116, 13)
+}
+
 // ---------- the yeti ----------
 
 var FLOOR = 104
@@ -984,11 +1644,11 @@ func pick(list) { return list[flr(rnd(len(list)))] }
 func isBoss() { return has(LEVELS[level], "boss") }
 
 func initBoss() {
-    bx = 112
+    bx = W * 4 - 16
     by = FLOOR
     bvx = 0
     bvy = 0
-    bhp = 4
+    bhp = 8
     banger = 0
     bstate = "intro"
     btimer = 100
@@ -1030,13 +1690,25 @@ func hitPip(x, y, r) {
 func dropIcicles(n) {
     var i = 0
     while i < n {
-        push(drops, {"x": 16 + rnd(224), "y": 8, "v": 0, "wait": 20 + i * 10})
+        push(drops, {"x": 16 + rnd(W * 8 - 32), "y": 8, "v": 0, "wait": 20 + i * 10})
         i += 1
     }
 }
 
 func pickAttack() {
     var r = rnd(3)
+    // angrier phases add new attacks: ice breath (phase 2) and icicle rain (phase 3)
+    if banger >= 1 and rnd(1) < 0.3 {
+        bstate = "breath"
+        btimer = 90
+        bface = px + 3 < bx ? -1 : 1
+        return
+    }
+    if banger >= 2 and rnd(1) < 0.35 {
+        bstate = "rain"
+        btimer = 70
+        return
+    }
     if r < 1 {
         bstate = "crouch"
         btimer = 38 - banger * 4
@@ -1064,13 +1736,44 @@ func land() {
 }
 
 // Pip's swing: it only hurts the yeti when he is dizzy and the swing reaches the shard
-func strike() {
+func strike(amount) {
     if bstate == "dying" or bstate == "dead" or bstate == "intro" { return }
     var sx = px + 3 + facing * 10
     var sy = py + 6
     if abs(sx - headX()) < 20 and abs(sy - headY()) < 20 {
         if bstate == "stunned" {
-            bhp -= 1
+            hurtBoss(amount)
+        } else {
+            burst(sx, sy, 6, 10, 1)
+            play(2)
+            vx = -facing * 2
+        }
+    }
+}
+
+// an ember bolt in the face: it hurts him while he's dizzy, and stops an attack he's winding up
+func boltHitBoss() {
+    if bstate == "dying" or bstate == "dead" or bstate == "intro" { return }
+    if bstate == "stunned" {
+        hurtBoss(1)
+    } else if bstate == "crouch" or bstate == "windup" or bstate == "rev" or bstate == "breath" {
+        bstate = "stunned"
+        btimer = 70
+        balls = filter(balls, func(b) { return not has(b, "breath") })
+        burst(headX(), headY(), 16, 9, 1.4)
+        shake(4)
+        play(5)
+    } else {
+        burst(headX(), headY(), 6, 9, 0.8)
+    }
+}
+
+func hurtBoss(amount) {
+    if bstate == "dying" or bstate == "dead" or bstate == "hurt" { return }
+    if oneHit { amount = 99 }
+    if true {
+        if true {
+            bhp -= amount
             hitstop = 6
             flash = 3
             bflash = 12
@@ -1079,9 +1782,16 @@ func strike() {
             burst(headX(), headY(), 25, 11, 2)
             burst(headX(), headY(), 15, 7, 1.5)
             push(rings, {"x": headX(), "y": headY(), "r": 3})
+            var was = banger
             banger = 0
-            if bhp <= 2 { banger = 1 }
-            if bhp <= 1 { banger = 2 }
+            if bhp <= 5 { banger = 1 }
+            if bhp <= 2 { banger = 2 }
+            if banger > was and bhp > 0 {
+                // a new phase: he roars, and fights harder
+                shake(10)
+                push(rings, {"x": headX(), "y": headY(), "r": 4})
+                push(rings, {"x": headX(), "y": headY(), "r": 16})
+            }
             if bhp <= 0 {
                 bstate = "dying"
                 btimer = 120
@@ -1090,10 +1800,6 @@ func strike() {
                 btimer = 30
                 bvx = facing * 3
             }
-        } else {
-            burst(sx, sy, 6, 10, 1)
-            play(2)
-            vx = -facing * 2
         }
     }
 }
@@ -1103,9 +1809,9 @@ func updateBoss() {
     for b in balls {
         b["x"] += b["vx"]
         b["y"] += b["vy"]
-        b["vy"] += 0.15
+        if not has(b, "breath") { b["vy"] += 0.15 }
         if hitPip(b["x"], b["y"], 4) { die() }
-        if b["y"] > FLOOR - 3 or b["x"] < 8 or b["x"] > 248 {
+        if b["y"] > FLOOR - 3 or b["x"] < 8 or b["x"] > W * 8 - 8 {
             b["gone"] = true
             burst(b["x"], b["y"], 12, 7, 1.2)
             push(rings, {"x": b["x"], "y": b["y"], "r": 2})
@@ -1118,7 +1824,7 @@ func updateBoss() {
         if w["life"] % 3 == 0 { burst(w["x"], FLOOR - 2, 2, 7, 0.6) }
         if abs(w["x"] - (px + 3)) < 5 and py + 12 > FLOOR - 7 { die() }
     }
-    waves = filter(waves, func(w) { return w["life"] > 0 and w["x"] > 8 and w["x"] < 248 })
+    waves = filter(waves, func(w) { return w["life"] > 0 and w["x"] > 8 and w["x"] < W * 8 - 8 })
     for r in rings { r["r"] += 2 }
     rings = filter(rings, func(r) { return r["r"] < 40 })
     for d in drops {
@@ -1210,8 +1916,8 @@ func updateBoss() {
     } else if bstate == "charge" {
         bx += bvx
         if btimer % 3 == 0 { burst(bx - bface * 12, by - 2, 2, 7, 0.6) }
-        if bx < 32 or bx > 224 {
-            bx = clamp(bx, 32, 224)
+        if bx < 32 or bx > W * 8 - 32 {
+            bx = clamp(bx, 32, W * 8 - 32)
             shake(9)
             play(4)
             flash = 2
@@ -1220,7 +1926,34 @@ func updateBoss() {
             bstate = "stunned"
             btimer = 170 - banger * 15
         }
+    } else if bstate == "breath" {
+        // ice breath: a spray of ice shards from his mouth, sweeping toward Pip
+        if btimer < 70 and btimer % 5 == 0 {
+            var aim = atan2(py + 6 - headY(), px + 3 - headX()) + sin(btimer * 0.15) * 0.35
+            push(balls, {"x": headX() + bface * 8, "y": headY() + 4, "vx": cos(aim) * 2.4, "vy": sin(aim) * 2.4, "breath": 1})
+            play(1)
+        }
+        if btimer <= 0 {
+            bstate = "idle"
+            btimer = 60
+        }
+    } else if bstate == "rain" {
+        // he roars and the ceiling comes down
+        if btimer == 60 {
+            shake(12)
+            play(4)
+            push(rings, {"x": headX(), "y": headY(), "r": 4})
+            push(rings, {"x": headX(), "y": headY(), "r": 18})
+        }
+        if btimer == 40 { dropIcicles(6 + banger * 2) }
+        if btimer <= 0 {
+            bstate = "idle"
+            btimer = 55
+        }
     } else if bstate == "stunned" {
+        if dashTime > 0 and px + 6 > bx - 18 and px < bx + 18 and py + 12 > by - 46 and py < by {
+            hurtBoss(1)   // a dash into him while he's dizzy
+        }
         if btimer <= 0 {
             bstate = "idle"
             btimer = 40
@@ -1247,7 +1980,7 @@ func updateBoss() {
             shardDrop = {"x": bx - 4, "y": by - 54, "vy": -3}
         }
     }
-    bx = clamp(bx, 30, 226)
+    bx = clamp(bx, 30, W * 8 - 30)   // (the arena can be any width)
 
     // touching the yeti hurts, unless he is down
     if bstate == "charge" or bstate == "air" {
@@ -1387,7 +2120,7 @@ func drawFace(fx, hy) {
         line(fx + 6, hy - 5, fx + 1, hy - 5, 1)
     }
     // mouth
-    if s == "intro" or s == "charge" or s == "rev" {
+    if s == "intro" or s == "charge" or s == "rev" or s == "breath" or s == "rain" {
         circfill(fx, hy + 7, 3, 1)
         circfill(fx, hy + 8, 1, 8)
         line(fx - 3, hy + 5, fx - 2, hy + 8, 7)
@@ -1500,14 +2233,6 @@ func drawFog(camx) {
     }
 }
 
-func drawBossBar() {
-    if bstate == "dead" or bstate == "intro" { return }
-    rectfill(13, 118, 114, 125, 1)
-    print("YETI", 15, 119, 7)
-    rectfill(34, 120, 112, 123, 2)
-    if bhp > 0 { rectfill(34, 120, 34 + bhp * 19 + 1, 123, 8) }
-}
-
 // ---------- drawing ----------
 
 func draw() {
@@ -1516,16 +2241,16 @@ func draw() {
         drawSettings()
         return
     }
+    if mode == "cheats" {
+        drawCheats()
+        return
+    }
     if mode == "title" {
         drawTitle()
         return
     }
     if mode == "epilogue" {
-        if len(lines) > 0 or saying() {
-            drawHeart()
-        } else {
-            drawEpilogue()
-        }
+        drawEpilogue()
         return
     }
     if mode == "end" {
@@ -1534,11 +2259,15 @@ func draw() {
     }
     var L = LEVELS[level]
     var camx = clamp(px + 3 - SW / 2, 0, W * 8 - SW)
+    camy = clamp(py + 6 - 64, 0, H * 8 - 128)
     cls(L["sky"])
     drawBackdrop(camx)
-    camera(camx, 0)
+    camera(camx, camy)
     map(L["x"], L["y"], 0, 0, W, H)
+    drawDoors()
+    drawNpcs()
     drawIcicles()
+    drawEnemies()
     if isBoss() {
         drawHazards()
         drawYeti()
@@ -1546,9 +2275,7 @@ func draw() {
     if dead == 0 { drawPip() }
     camera()
     if isBoss() { drawFog(camx) }
-    drawHud()
     camera(-OX, 0)
-    if isBoss() { drawBossBar() }
     if levelTime < 90 and len(lines) == 0 {
         rectfill(0, 54, 127, 70, 1)
         print(L["name"], 64 - len(L["name"]) * 2, 60, 7)
@@ -1564,12 +2291,12 @@ func draw() {
             }
         }
     }
-    camera(camx, 0)   // so the particles line up with the world
+    camera(camx, camy)   // so the particles line up with the world
 }
 
 func drawBackdrop(camx) {
     var sky = LEVELS[level]["sky"]
-    if level == 3 or level == 4 or level == 5 or level == 8 {
+    if contains([3, 4, 5, 8, 10, 12, 14], level) {
         // cave: far rock and glints
         var i = 0
         while i < 14 {
@@ -1583,7 +2310,7 @@ func drawBackdrop(camx) {
     }
     var far = 6
     var near = 3
-    if level == 2 {
+    if level == 2 or level == 11 {
         far = 14
         near = 2
     }
@@ -1591,7 +2318,7 @@ func drawBackdrop(camx) {
         far = 7
         near = 13
     }
-    if level == 7 {
+    if level == 7 or level == 13 {
         far = 7
         near = 6
     }
@@ -1618,7 +2345,7 @@ func drawBackdrop(camx) {
         circfill(hx, 140, 24, near)
         k += 1
     }
-    if level >= 6 {
+    if contains([6, 7, 13], level) {
         for f in snow {
             f["y"] += f["s"]
             f["x"] -= f["s"] * 0.6
@@ -1656,6 +2383,16 @@ func drawPip() {
     }
     spr(n, px - 5, py - 4, 2, 2, flip)
     pal()
+    if wallCharge or wallRun > 0 {
+        // his eyes glow green while the wall crystal is ready (or working)
+        var ex = n == 14 ? 9 : 8
+        var ey = n == 2 ? 8 : (n == 6 ? 6 : 7)
+        for k in [0, 2] {
+            var gx = flip ? px - 5 + 15 - ex - k : px - 5 + ex + k
+            pset(gx, py - 4 + ey, 11)
+            if flr(t() * 8) % 2 == 0 { pset(gx - facing, py - 4 + ey, 3) }   // a flicker trailing behind
+        }
+    }
     // the ember: a little warm spark on the scarf while the dash is ready
     if canDash and dashTime == 0 {
         var tip = scarf[len(scarf) - 1]
@@ -1670,16 +2407,6 @@ func drawPip() {
         line(ax - facing, py, ax + facing * 4, py + 6, 12)
         line(ax + facing * 4, py + 6, ax - facing, py + 12, 12)
     }
-}
-
-func drawHud() {
-    // small and out of the way: shards and coins, with a shadow so they read on any sky
-    spr(109, 2, 2)
-    print(shards + "/9", 12, 5, 1)
-    print(shards + "/9", 11, 4, 7)
-    spr(110, 30, 2)
-    print("" + berries, 40, 5, 1)
-    print("" + berries, 39, 4, 7)
 }
 
 var LOGO = [
@@ -1810,55 +2537,39 @@ func drawEnd() {
     print("TIME  " + tm, 64 - (6 + len(tm)) * 2, 90, 10)
     if flr(t() * 2) % 2 == 0 { print("PRESS SPACE", 42, 116, 6) }
 }
-
-// while the last story boxes play: the shards come together
-func drawHeart() {
-    cls(1)
-    var k = 0
-    while k < 9 {
-        var a = k * 0.7 + t()
-        var r = max(0, 40 - t() * 4 % 40)
-        line(64, 50, 64 + cos(a) * 60, 50 + sin(a) * 60, 2)
-        k += 1
-    }
-    var glow = 3 + sin(t() * 4) * 2
-    circfill(64, 50, 14 + glow, 3)
-    circ(64, 50, 18 + glow, 11)
-    sspr(104, 48, 8, 8, 48, 34, 32, 32)
-}
 //@sprites
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 //00000000000000000000000000000000000000000000000000000111111000000000000000000000000000000000000000000000000000000000000000000000
-//00000111111000000000000000000000000001111110000000001bbbbbb100000000011111100000000001111110000000000111111000000000001111110000
-//00001bbbbbb10000000001111110000000001bbbbbb100000001b3bbbbbb100000001bbbbbb1000000001bbbbbb1000000001bbbbbb10000000001bbbbbb1000
-//0001b3bbbbbb100000001bbbbbb100000001b3bbbbbb10000001bbbbbbbbb1100001b3bbbbbb10000001b3bbbbbb10000001b3bbbbbb100000001b3bbbbbb100
-//0001bbbbbbbbb1100001b3bbbbbb10000001bbbbbbbbb11000014ffffff111000001bbbbbbbbb1100001bbbbbbbbb1100001bbbbbbbbb11000001bbbbbbbbb11
-//00014ffffff111000001bbbbbbbbb11000014ffffff11100000144ff1f1f100000014ffffff1110000014ffffff1110000014ffffff11100000014ffffff1110
-//000144ff1f1f100000014ffffff11100000144ff1f1f100000014ffffff91000000144ff1f1f1000000144ff1f1f1000000144ff1f1f10000000144ff1f1f100
-//00014ffffff91000000144ff1f1f100000014ffffff91000000001ffff10000000014ffffff9100000014ffffff9100000014ffffff91000000014ffffff9100
-//000001ffff10000000014ffffff91000000001ffff100000000113bbbbb31100000001ffff100000000001ffff100000000001ffff1000000000001ffff10000
-//000113bbbbb31100000001ffff100000000113bbbbb31100001f13bbbbb31f10000113bbbbb3110000f113bbbbb311f000f113bbbbb311f00000113bbbbb3110
-//001f13bbbbb31f10000113bbbbb31100001f13bbbbb31f100001144a44410000001f13bbbbb31f1000013bbbbbbb100000013bbbbbbb10000001f13bbbbb31f1
+//00000111111000000000000000000000000001111110000000001bbbabb100000000011111100000000001111110000000000111111000000000001111110000
+//00001bbbabb10000000001111110000000001bbbabb100000001b7bbbbb3100000001bbbabb1000000001bbbabb1000000001bbbabb10000000001bbbabb1000
+//0001b7bbbbb3100000001bbbabb100000001b7bbbbb3100000013bbbbbbbb1100001b7bbbbb310000001b7bbbbb310000001b7bbbbb3100000001b7bbbbb3100
+//00013bbbbbbbb1100001b7bbbbb3100000013bbbbbbbb11000014ffffff1110000013bbbbbbbb11000013bbbbbbbb11000013bbbbbbbb110000013bbbbbbbb11
+//00014ffffff1110000013bbbbbbbb11000014ffffff11100000144ff1f1f100000014ffffff1110000014ffffff1110000014ffffff11100000014ffffff1110
+//000144ff1f1f100000014ffffff11100000144ff1f1f100000014fffffe91000000144ff1f1f1000000144ff1f1f1000000144ff1f1f10000000144ff1f1f100
+//00014fffffe91000000144ff1f1f100000014fffffe91000000001ffff10000000014fffffe9100000014fffffe9100000014fffffe91000000014fffffe9100
+//000001ffff10000000014fffffe91000000001ffff100000000117bbbbb71100000001ffff100000000001ffff100000000001ffff1000000000001ffff10000
+//000117bbbbb71100000001ffff100000000117bbbbb71100001f13bbbbb31f10000117bbbbb7110000f113bbbbb311f000f113bbbbb311f00000117bbbbb7110
+//001f13bbbbb31f10000117bbbbb71100001f13bbbbb31f100001144a44410000001f13bbbbb31f1000013bbbbbbb100000013bbbbbbb10000001f13bbbbb31f1
 //0001144a44410000001f13bbbbb31f100001144a44410000000013b33b3100000001144a444100000001144a444100000001144a444100000001144a44410000
 //000013b33b3100000001144a44410000000013b33b310000000013b33b310000000013b33b310000000013b33b310000000013b33b310000000013b33b310000
 //00001110011100000000111001110000000111000011100000000111100000000000110001110000000014410144100000011000001100000011111000000000
-//00014410014410000001441001441000001441000001441000000144410000000001440001441000000000000000000000144000004410000144114410000000
+//00014910014910000001491001491000001441000001441000000144410000000001440001441000000000000000000000144000004410000144114410000000
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-//00000111111000000000011111100000000000111111000000000111111000000000000000000000000000000000000000000000000000000000000000000000
-//00001bbbbbb1000000701bbbbbb10000000001bbbbbb100000001999999100000000000000000000000000000000000000000000000000000000000000000000
-//0001b3bbbbbb10000061b3bbbbbb100000001b3bbbbbb10000019999999910000000000000000000000000000000000000000000000000000000000000000000
-//0001bbbbbbbbb1100041bbbbbbbbb11000001bbbbbbbbb1100019ffffff910000000000000000000000000000000000000000000000000000000000000000000
-//00014ffffff1110000f14ffffff11100000014ffffff111000019f1ff1f910000000000000000000000000000000000000000000000000000000000000000000
-//000144ff1f1f1000000144ff1f1f10000000144ff1f1f10000019ffffff910000000000000000000000000000000000000000000000000000000000000000000
-//00014ffffff9100000014ffffff91000000014ffffff9100000199ffff9910000000000000000000000000000000000000000000000000000000000000000000
-//000001ffff100000000001ffff1000000000001ffff100000001991ff19910000000000000000000000000000000000000000000000000000000000000000000
-//00f113bbbbb311f0000113bbbbb311000000113bbbbb31f600019e1ee1e910000000000000000000000000000000000000000000000000000000000000000000
-//00013bbbbbbb1000000113bbbbb31f100001f13bbbbb3100001f1eeeeee1f1000000000000000000000000000000000000000000000000000000000000000000
-//0001144a444100000001144a444100000001144a4441000000001eeeeee100000000000000000000000000000000000000000000000000000000000000000000
-//000013b33b310000000013b33b310000000013b33b3100000001eeeeeeee10000000000000000000000000000000000000000000000000000000000000000000
-//00001110111000000000111001110000000111000111000000000110011000000000000000000000000000000000000000000000000000000000000000000000
-//00001441441000000001441001441000001441000144100000001440044100000000000000000000000000000000000000000000000000000000000000000000
+//00000111111000000000011111100000000000111111000000000111111000000000001111000000000000000000000000000000000000000000000000000000
+//00001bbbabb1000000701bbbbbb10000000001bbbabb100000001999999100000000014444100000000000000000000000000000000000000000000000000000
+//0001b7bbbbb310000061b3bbbbbb100000001b7bbbbb310000019999999910000000144444410000000000000000000000000000000000000000000000000000
+//00013bbbbbbbb1100041bbbbbbbbb110000013bbbbbbbb1100019ffffff910000001111111111000000177100177100000000000000000000000000000000000
+//00014ffffff1110000f14ffffff11100000014ffffff111000019f1ff1f91000000016ffff610000000177711777100000000000000000000000000000000000
+//000144ff1f1f1000000144ff1f1f10000000144ff1f1f10000019ffffff9100000001f1ff1f1000000017aa77aa7100000000000000000000000000000000000
+//00014fffffe9100000014fffffe91000000014fffffe9100000199ffff991000000016f99f61000000017a1771a7100000000000000000000000000000000000
+//000001ffff100000000001ffff1000000000001ffff100000001991ff19910000000177777710000000177799777100000000000000000000000000000000000
+//00f113bbbbb311f0000113bbbbb311000000113bbbbb31f600019e1ee1e910000001177777711000000176777767100000000000000000000000000000000000
+//00013bbbbbbb1000000113bbbbb31f100001f13bbbbb3100001f1eeeeee1f100001f15444451f140000177777777100000000000000000000000000000000000
+//0001144a444100000001144a444100000001144a4441000000001eeeeee100000001544445100400000176767677100000000000000000000000000000000000
+//000013b33b310000000013b33b310000000013b33b3100000001eeeeeeee10000001544445100400000017777771000000000000000000000000000000000000
+//00001110111000000000111001110000000111000111000000000110011000000000111111000400000001a11a10000000000000000000000000000000000000
+//00001441441000000001491001491000001441000144100000001440044100000000140041000400000000000000000000000000000000000000000000000000
 //94442444bbbbbbbb94442444bbbbbbbb144424440bbbbbbb144424440bbbbbbb94442441bbbbbbb094442441bbbbbbb0144424410bbbbbb0144424410bbbbbb0
 //44494442b3bb3bb344494442b3bb3bb314494442b3bb3bb314494442b3bb3bb344494441b3bb3bb344494441b3bb3bb314494441b3bb3bb314494441b3bb3bb3
 //44444494434434344444449443443434144444941344343414444494134434344444449143443431444444914344343114444491134434311444449113443431
@@ -1875,14 +2586,14 @@ func drawHeart() {
 //65555651655556516555565165555651155556511555565115555651155556516555565165555651655556516555565115555651155556511555565115555651
 //55556551555565515555655155556551155565511555655115556551155565515555655155556551555565515555655115556551155565511555655115556551
 //11111111111111111111111111111111111111111111111101111111011111111111111111111111111111101111111011111111111111110111111001111110
-//00000000111111111566000000006651000000000888888099999994909990941444444444444444444444410009000000000000003bb3000011110000030000
-//000000005555555515676700007676510000000008eeee809a9994949a900494199999999999999999999991009a90000000000003b77b3001aaaa10000b0000
-//070007006666666615660000000066510000000000600600994499940944909414444444444444444444444109aa7900000400003bb7bbb31a7aa9a100300000
-//060006006760676015600000000006510888888000066000949999499409990901000000001001000000001009a77a90004040003bbbbbb31a7a9aa100b00000
-//6760676006000600156600000000665108eeee800060060099949994909499940010000000000000000001009aa77aa90400040003bbbb301aa79aa100030000
-//6666666607000700156767000076765100600600000660009a4999949a4909040000000000000000000000009a7777a904000400003bb3001aa9aa91000b3000
-//555555550000000015660000000066510006600000600600999994949909949000000000000000000000000009aaaa900044400000033000019999110000b000
-//11111111000000001560000000000651011551100115511044444444444404440000000000000000000000000099990000000000000000000011110000030000
+//00000000111111111566000000006651000000000888888099999994909990941444444444444444444444410008000000000000003bb3000011110000030000
+//000000005555555515676700007676510000000008eeee809a9994949a900494199999999999999999999991008e80000000000003b77b3001aaaa10000b0000
+//070007006666666615660000000066510000000000600600994499940944909414444444444444444444444108ee7800000400003bb7bbb31a7aa9a100300000
+//060006006760676015600000000006510888888000066000949999499409990901000000001001000000001008e77e80004040003bbbbbb31a7a9aa100b00000
+//6760676006000600156600000000665108eeee800060060099949994909499940010000000000000000001008ee77ee80400040003bbbb301aa79aa100030000
+//6666666607000700156767000076765100600600000660009a4999949a4909040000000000000000000000008e7777e804000400003bb3001aa9aa91000b3000
+//555555550000000015660000000066510006600000600600999994949909949000000000000000000000000008eeee800044400000033000019999110000b000
+//11111111000000001560000000000651011551100115511044444444444404440000000000000000000000000088880000000000000000000011110000030000
 //000000000000000000000000000000000000000000000000000000000000004400003333333300003bbbbbbb44000000bbbbbbb3000000000000000007777770
 //00000000000000000000000000000000000000000000000000000000000000410033bbbbbbbb33003bbb3bbb14000000bbb3bbb3000000000000000000677600
 //000800000000000000000000008880000000000000003330033300000000004403bbbbbbbbbbbb3003bbbbbb44000000bbbbbb300000d0000000000000677000
@@ -1899,82 +2610,75 @@ func drawHeart() {
 //cc7ccccdcc7ccccdcc7ccccdcc7ccccd1c7ccccd1c7ccccd1c7ccccd1c7ccccdcc7cccc1cc7cccc1cc7cccc1cc7cccc11c7cccc11c7cccc11c7cccc11c7cccc1
 //c7ccccccc7ccccccc7ccccccc7cccccc17cccccc17cccccc17cccccc17ccccccc7ccccc1c7ccccc1c7ccccc1c7ccccc117ccccc117ccccc117ccccc117ccccc1
 //7cccccc77cccccc711111111111111111cccccc71cccccc701111111011111117cccccc17cccccc111111110111111101cccccc11cccccc10111111001111110
-//17777770000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-//017cc710000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-//001c7100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-//001c7000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-//0001c100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-//0001c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-//00001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//1777777000000000000000000000000000000000005555005499994500000000c71c71c7dccccccd00000000000000000077770000777700c000000c00000000
+//017cc710000000000000000000000000000000000566665054944a4500000000c71c71c7c7c1cc7c00000000000000000777777007777770cc0000cc00000000
+//001c710000000000000000000000000000000000564444655499994500000000c71c71c7cc1c71cc00000000000000007717717777177177ccc11ccc00011000
+//001c700000000000000000000000000000000000549999455494494500000000ddddddddc1cccc1c000000000000000077777777777777770cc11cc000188100
+//0001c10000000000000000000000000000000000549449455499994500000000c71c71c7cc71c1cc00000000000000007778877777788777001881000cc11cc0
+//0001c00000000000000000000000000000000000549999455494494500000000c71c71c7c1cc1ccc0000000000000000077777700777777000011000ccc11ccc
+//0000100000000000000000000000000000000000549449455499994500000000c71c71c7cc1c7c1c0000000000000000067007600067760000000000cc0000cc
+//00000000000000000000000000000000000000005499994555555555000000001d11d11ddddddddd0000000000000000660000660066066000000000c000000c
+//00000000000330000005500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//00990000003bb3000050050000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//09aa990003b77b300500005000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//9a77aa903bb77bb35000000500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//09aa990003b77b300500005000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//0099000003b77b300500005000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//00000000003bb3000050050000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//00000000000330000005500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 //@flags
-//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010101010101010101010101010101010101010101010101010101010101010102020202101081814040402000080400000000000000000000000000000000000101010101010101010101010101010102
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010101010101010101010101010101010101010101010101010101010101010102020202101081814040402000080400000000000000000000000000000000000101010101010101010101010101010102000000000000000101
 //@map
-//0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005353535353535353535353535353535353535353535353535353535353535353
-//0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007f00007f007f00000000007f7f000000007f00007f007f7f7f00007f7f000000
-//000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006e000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-//000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000071716d710000000000000000000000000000000000000000000000000000000000000000
-//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006b0000454141410000000000000000000000000000000000000000000000000000000000000000
-//0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000727200740000000000444040400000000000000000000000000000000000000000000000000000000000000000
-//0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000454141490000000000444040400000000000000000000000000000000000000000000000000000000000000000
-//00000000000000000000000000000000000000000000000000000000006e0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000444040480000000000444040400000000000000000000000000000000000000000000000000000000000000000
-//0000000000000000000000000000000000000000000000000000000068696a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000066666600444040480000000000444040400000000000000000000000000000000000000000000000000000000000000000
-//0000000000000000000000000000006e000000000000000000700072000000000000000000000000000000000000000000000000000000000000006e0000000000000000007576727200000074000000000000444040480000000000444040400000006869696a0000000000000000000000000000000000006869696a000000
-//00000000000000000000006e00006869696a0000000000454141414900000000000000000000000075767272006d72720000000000000000000000000000000000000000004541414141414141490000000000444040480000000000444040400000000000000000000000000000000000000000000000000000000000000000
-//0000000000000000000000000000000000000000007100444040404800000000000000000000004541414141414141410000000000000000000000000000000000000000004440404040404040480000000000444040480000000000444040400000000000000000000000000000000000000000000000000000000000000000
-//727000740000700000000000007072720000704541414140404040480000007400006060007200444040404040404040727000007400007200000000000000000060607172444040404040404048000000000044404048000000000044404040007e007d0000007e00007e7e007e7d0000747d007e74007e7e7e0000747e747e
-//4141414141414141414900000045414141414140404040404040404800000045414141414141414040404040404040404141414141414149000000000000004541414141414040404040404040480000000000444040480000000000444040405151515151515151515151515151515151515151515151515151515151515151
-//4040404040404040404800000044404040404040404040404040404800000044404040404040404040404040404040404040404040404048000000000000004440404040404040404040404040480000000000444040480000000000444040405050505050505050505050505050505050505050505050505050505050505050
-//4040404040404040404800000044404040404040404040404040404800000044404040404040404040404040404040404040404040404048000000000000004440404040404040404040404040480000000000444040480000000000444040405050505050505050505050505050505050505050505050505050505050505050
-//0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151510000000000000000000000000000000000000000000000000000000000000000
-//000000000000000000000000000000000000000000000000006e000000000000000000000000000000000000000000005252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252520000000000000000000000000000000000000000000000000000000000000000
-//0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007f00007f7f00000000007f0000006161616161617f007f0000007f00616161616161007f7f0000000000000000007f7f0000000000000000000000000000000000000000000000000000000000000000
-//0000000000000000000000000000000000000000000000000000000072740000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-//0000000000000000000000000000700000000000000000000000000045490000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006e00000000000000000000000000000000000000000000000000000000000000000000000000
-//0000000000000000006869696a004541490000000000000000000000444800000000000000000000000000000000000000000000000000000000000000000000006e0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-//000000000000000000000000000044404800000000000000000000004448000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006b000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-//000000000000000000000000000044404800666600727100716400004448000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007d7e00007d007e006d00740000000000000000000000000000000000000000000000000000000000000000
-//00000000000000000000000000004440480000000045414141414900444800000000000000000000000000000000000000000000000000000000000000000000007e000000000000000000000000006b000000000055515151515151515151510000000000000000000000000000000000000000000000000000000000000000
-//000000000000000000000000000044404800000000444040404048004448007879000000000000006e000000000000000000000000000000000000000000000055590000000000000066666600000000000000000054505050505050505050500000000000000000000000000000000000000000000000000000000000000000
-//000000000000000000000000000044404800000000444040404048004448007a7c00000000006869696a00000000000000000000000000000000007e7e00000054580000000000000000000000000000000000000054505050505050505050500000000000000000000000000000000000000000000000000000000000000000
-//00000000000000000000000000004440480000000044404040404800444800777b0000000000000000000000000000007e00007e007d0000000000555900000054580000005559000000000000000000000000000054505050505050505050500000000000000000000000000000000000000000000000000000000000000000
-//00007576727072640000000000004440480000000044404040404800444872777b7060606000000071737471736d72745151515151515900000000545800000054580000005458000000000000000000000000000054505050505050505050500000000000000000000000000000000000000000000000000000000000000000
-//4141414141414149000000000000444048000000004440404040480044404141414141414141414141414141414141415050505050505800000000545800000054580000005458000000000000000000000000000054505050505050505050500000000000000000000000000000000000000000000000000000000000000000
-//4040404040404048606060606060444048000000004440404040480044404040404040404040404040404040404040405050505050505860606060545860606054586060605458606060606060606060606060606054505050505050505050500000000000000000000000000000000000000000000000000000000000000000
-//4040404040404040414141414141404048000000004440404040480044404040404040404040404040404040404040405050505050505051515151505051515150505151515050515151515151515151515151515150505050505050505050500000000000000000000000000000000000000000000000000000000000000000
-//8181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181815151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151510000000000000000000000000000000000000000000000000000000000000000
-//8282828282828282828282828282828282828282828282828282828282828282828282828282828282828282828282825252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252520000000000000000000000000000000000000000000000000000000000000000
-//000000000000900000900000000000000090009000900000000000000090009000000000000090000000009000000000007f7f7f7f007f7f61616161616161616161616161616161616161616161616161616161616161616100007f0000007f0000000000000000000000000000000000000000000000000000000000000000
-//0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-//0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006e0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-//000000000000000000000000000000000000000000000000000000000000000000000000000000006e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-//0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-//000000000000000000000000000000000000000000000000006e00000000000000000000007d0000000000000000000000000000000000000000006b00000000000000000000006b000000000000000000006b0000006b0000000000000000000000000000000000000000000000000000000000000000000000000000000000
-//000000000000000000000000006e0000000000000000000000000000000000000000666600858189000000000000000000000000000000000000000000000000006e0000000000000000000000000000000000000000000000000000006d7e740000000000000000000000000000000000000000000000000000000000000000
-//0000000000000000000000000000000000000000000000000000007e000000007e000000008480880074747e006d7d0074007e007e7d00000000000000000000007474000000000000000000747e0000000000000000000000005551515151510000000000000000000000000000000000000000000000000000000000000000
-//0000000000000000000000000000000000007d7e740000000000008581818181890000000084808081818181818181815151515151590000000000000000000000555900000000000000000055590000000000000000000000005450505050500000000000000000000000000000000000000000000000000000000000000000
-//7e7e007d007e00007d747e7d0000008581818181818189000000008480808080880000000084808080808080808080805050505050580000000000000000000000545800000000000000000054580000000000000000000000005450505050500000000000000000000000000000000000000000000000000000000000000000
-//8181818181818181818181890000008480808080808088000000008480808080880000000084808080808080808080805050505050580000000000000000000000545800000000000000000054580000000000000000000000005450505050500000000000000000000000000000000000000000000000000000000000000000
-//8080808080808080808080880000008480808080808088606060608480808080880000000084808080808080808080805050505050586060606060606060606060545860606060606060606054586060606060606060606060605450505050500000000000000000000000000000000000000000000000000000000000000000
-//8080808080808080808080880000008480808080808080818181818080808080880000000084808080808080808080805050505050505151515151515151515151505051515151515151515150505151515151515151515151515050505050500000000000000000000000000000000000000000000000000000000000000000
-//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006e0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000074007e7400000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-//00000000000000000000000000000000000000000000000000000000006e0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005753535b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-//00000000000000000000000000000000000000000000000000000000000000000000006e00000000000000000000000000000000000000006e000000000000006b0000000000000000000000000000000000007f0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-//0000000000000000000000000000000000000000000000000000006869696a00000000000000000000000000000000000000000000000000000000555900000000000000666666000000000000000000000000000000666600000000000000000000000000000000000000000000000000000000000000000000000000000000
-//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005458000000000000000000000000007e000000000000000000000000000000666600006d000000000000000000000000000000000000000000000000000000000000000000
-//0000000000000000000000000000000000000000000000000000000000000000006666000000000000000000000000000000000000006869696a00545800000000000000000000005551590000000000000000000000000000000000005551510000000000000000000000000000000000000000000000000000000000000000
-//0000000000000000000000000000000000000000000000000000000000000000000000006666000000000000000000000000000000000000000000545800000000000000000000005450580000000000000000000000000000000000005450500000000000000000000000000000000000000000000000000000000000000000
-//0000000000000000000000000000000000000000000000000000000000000000000000000000006600000000000000000000000000000000000000545800000000000000000000005450580000006400000000000000000000000000005450500000000000000000000000000000000000000000000000000000000000000000
-//0000000000000000000000006e000000000000000000000000000000000000000000000000000000000074007d6d00740000000000000000000000545800000000000000000000005450580000555159000000000000000000000000005450500000000000000000000000000000000000000000000000000000000000000000
-//0000000000000000000000000000000000000000007e7e006400000000000000000000000000000000858181818181810000000000000000000000545800000000000000000000005450580000545058000000000000000000000000005450500000000000000000000000000000000000000000000000000000000000000000
-//0000000000000000000000000000000000000000858181818900000000000000000000000000000000848080808080800000000000000000000000545800000000000000000000005450580000545058000000000000000000000000005450500000000000000000000000000000000000000000000000000000000000000000
-//7e7e00007e74007d74747d0000007e000060000084808080880000000000000000000000000000000084808080808080007e000064000000000000545800000000000000000000005450580000545058000000000000000000000000005450500000000000000000000000000000000000000000000000000000000000000000
-//8181818181818181818181818181818181890000848080808800000000000000000000000000000000848080808080805151515159000000000000545800000000000000000000005450580000545058000000000000000000000000005450500000000000000000000000000000000000000000000000000000000000000000
-//8080808080808080808080808080808080880000848080808800000000000000000000000000000000848080808080805050505058606060606060545860606060606060606060605450586060545058606060606060606060606060605450500000000000000000000000000000000000000000000000000000000000000000
-//8080808080808080808080808080808080880000848080808800000000000000000000000000000000848080808080805050505050515151515151505051515151515151515151515050505151505050515151515151515151515151515050500000000000000000000000000000000000000000000000000000000000000000
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006e0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006e0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000066660000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006b000000000000000000000000000000000000000000000000000000000000000000000000000000006d0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000099999900000000
+//0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000706d007200000000000000000000000000000000000000000000000000000000000000000000000000000000000000007475767200000000000000000000000000000000000000000000000000000000000000000045414100000000000000000068696a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000072747200007074000000000000000000000000000000000099000000000000
+//000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000666600000000006869696a000000000000000000000000004541414141410000000000000000000000000000000000000000000000000000000000000000000000700000740000000000454141490000000000000000000000000000000000000000000000000000666600000000004642420000000000000000000000000000000000000000000000006b000000727400000000000000000000000000000000000000000000006e00000045414900004541490000000000000000000000000000000099000000000000
+//00000000000000000000000000000000000000000000000000000000006e000000000000000000000000000000000000000000000000000000000000000000000000006b0000000000000000000046424242424200000000000000000000000000000000000000000000000000000000000000000000004541414900000000004440404800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000454900000000000000000000000000000000000000000000000000000046424a000044404800666600000000006e0000000000000099006d00000000
+//0000000000000000000000000000000000000000000000000000000068696a000000000000000000000000000000006e0000006666000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000066666600444040480000000000444040480000000000000000000000000000000072000000000000006666000000000000000000000000000000000000000000000000000072000000000000000000000044480000000000000000000000000000000000000000000068696a000000000000004440480000000066660074710000757600000045414100000000
+//0000000000000000000000000000006e000000000000007272007272000000000000000000000000000000000000454149000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006e000000000000000000000000000000000000000000000044404048000000000044404048000000000000006e00000000000045414141490000000000000000000000006e00000000000000000000000000000000000045414900000000000000000000004448000000000000000000006e0000000000000000000000000000000000000000004440480000000000000045414900454149000044404000000000
+//00000000000000000000006e00006869696a0000000000454141414900000000000000000000000071007270004540404800000000000000000000000000000000000000007400007064000000000000000000000000000000000000000000000000000000000000000000007172727470000000000000444040480000000000444040480000000000007271007100000000464242424a000066660000000000000000000000000000000000000000000000000000004440480000000073647576000000444800000000000000006869696a00000000000000686a00000000000000000000004440480000000000000046424a0046424a000044404000000000
+//0000000000000000000000000000000000000000007072444040404800000000000000000000004541414141414040404800000000000000000000000000000000000000004541414141490000000000000000000000000000000000000000000000000000000000000000004541414141490000000000444040480000000000444040480000000000454141414900000000000000000000000000000000000000000000000000000000000000000000000000000000444048000000004541414900000044480000000000000000000000000000000000000000000000000000000000000000444048000000000000006f00000000006f000044404000000000
+//72000070740000007200000000717171727200454141414040404048000000747576606072720044404040404040404048000000000000000000000000000000000000000044404040404800000000000000000000000075767270720000000000000072707000000071007444404040404800000000004440404800000000004440404800000000004440404048000000000000000000000000000000000000000071640000000000007000720000640000000000004440480000000044404048000000444874727470606060707075767200720000686a00000000000000000000000000004440480000000000000000000000000000000044404000000000
+//41414141414141414149000000454141414141404040404040404048000000454141414141414140404040404040404048000000000000000000000000000000000000000044404040404800000000000000000041414141414141490000000000000045414141414141414140404040404800000000004440404800000000004440404800000000004440404048000000000000000000000000000000000000000045414900000041414141414141490000000000004440480000000044404048000000444041414141414141414141414141490000000000000000000000000000000000004440480000000000000000000000000000000044404000000000
+//40404040404040404048000000444040404040404040404040404048000000444040404040404040404040404040404048000000000000000000000000000000000000000044404040404800000000000000000040404040404040480000000000000044404040404040404040404040404800000000004440404800000000004440404800000000004440404048000000000000000000000000000000000000000046424a00000040404040404040486060606060604440480000000044404048000000444040404040404040404040404040480000000000000000000000000000000000004440480000000000000000000000000000000044404000000000
+//40404040404040404048606060444040404040404040404040404048606060444040404040404040404040404040404048606060606060606060606060606060606060606044404040404860606060606060606040404040404040486060606060606044404040404040404040404040404860606060604440404860606060604440404860606060604440404048606060606060606060606060606060606060606060606060606040404040404040404141414141414040486060606044404048606060444040404040404040404040404040486060606060606060606060606060606060604440486060606060606060606060606060606044404000000000
+//51515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818181818151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515151515100000000
+//52525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525282828282828282828282828282828282828282828282828282828282828282828282828282828282828282828282828282828282828282828282828282828282828282828282828282828282828282828282828252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525200000000
+//000000000000007f7f0000007f0000007f7f7f000000007f00007f00000000007f007f7f7f0000007f7f7f7f007f7f00007f0000007f00000000007f7f00007f007f007f7f007f7f000000007f007f0000007f0000000000000090000090000000000000009000900090000000000000009000900000000000009000000000900000000000000000000000900000000000000000000090909000000000000000000000009000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000000000000000000000000000000000000000000000000000006e000000000000000000006e00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//00000000000000000000000000000000006e00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006e00000000000000000000000000000000000000006161610000000000000000000000000000000000000000000000000000000000000000000000
+//000000000000000000000000000000000000000000000000000000000000000000006b000000000000000000000000000000000068696a0000000000000000006e000000000000000000006e0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006e00000000000000000000000000000000000000000000000000000000006b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000063000000006e0000000000000000000000000000000000000000000000000000000000
+//000000000000000000000000000000000000000000000000000000000000000000000000007e00000074007e7e7d007e0000000000000000000000000000000000000000006b000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007d7e9c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006300000000000000007e00007e00000000000000000000000000000000006d00000000
+//000000000000000000000000000000007400000000000000000000000000006b0000000000555151515151515151515900000000000000000000000000000068696a000000000000006666660000006b00007e6d000000000000000000000000000000000000000000000000006e0000000000000000000000000000000000000000000000000000000000000000647e00000068696a00000000000000008581818900000000000000000000000000000000006b00000000000000000000006b000000000000000000006b0000006b00000000000000000000000000006300000000000055515900005551590000000000000000000000000000555100000000
+//000000000000000000000000000000005559000000000000006666660000000000009e00005450505050505050505058000000000000000000000000000000000000000000000000000000000000000000005551000000000000000000000000006e0000000000000000000000000000000000000000666600858189000000000000000000000000000000000087838b00000000000000000000000000008682828a00000000006d00000000000000000000000000000000006e000000000000000000000000000000000000000000000000747d00007e7400000000000000000000000056525a000056525a0000000000000000000000000000545000000000
+//00000000000000000000007e7e00000054580000007d00000000000000000000000000000054505050505050505050580000000000000000007e00640000000000000000000000000000000000000000000054500000000000000000000000000000000000000000000000000000000074009c0000000000008480887e007d00009c007e000000000000000000000000000000000000000000000000000000000000000000858181007e7e7e00000000000000000000000000747e000000000000000000747e000000000000000000000000555151515159000000000000000000000000000000000000000000000000000000a100006b000000545000000000
+//0000007e007474000000005559000000545800000055590000000000000000000000000000545050505050505050505800000000000000005551515900000000000000000000000000000000000000000000545000000000000000000000000000000000007e7e007e9c7d000000008581818181890000000084808081818181818181890000000000640000000000000000000000000000000000000000000000000000008480805151515151590000000000000000000000555900000000000000000055590000000000000000000000005450505050580000006b000000000000000000000000000000000000000000000000000000000000545000000000
+//51515151515159000000005458000000545800000054580000000000000000000000000000545050505050505050505800000000000000005652525a000000000000000000000000000000000000000000005450747d007e74007e7e7e0000740000008581818181818189000000008480808080880000000084808080808080808080880000000087838b000000000000000000000000000000000000000000000000000084808050505050505800000000000000000000005458000000000000000000545800000000000000000000000054505050505800000000000000640000000000000000000000000000000055590000000000000000545000000000
+//50505050505058000000005458000000545800000054580000000000000000000000000000545050505050505050505800000000000000000000007f00000000000000000000000000000000000000000000545081818181818181818181818900000084808080808080880000000084808080808800000000848080808080808080808800000000000000000000000000000000000000000000000000000000000000000084808050505050505800000000000000000000005458000000000000000000545800000000000000000000000054505050505800000000000066666600000000000000000000000000000054580000000000000000545000000000
+//50505050505058606060605458606060545860606054586060606060606060606060606060545050505050505050505860606060606060606060606060606060606060606060606060606060606060606060545080808080808080808080808800000084808080808080886060606084808080808800000000848080808080808080808800000000000000000000000000000000000000000000000000000000000000000084808050505050505860606060606060606060605458606060606060606060545860606060606060606060606054505050505860606060606060606060606060606060606060606060606054586060606060606060545000000000
+//50505050505050515151515050515151505051515150505151515151515151515151515151505050505050505050505051515151515151515151515151515151515151515151515151515151515151515151505080808080808080808080808860606084808080808080808181818180808080808860606060848080808080808080808860606060606060606060606060606060606060606060606060606060606060606084808050505050505051515151515151515151515050515151515151515151505051515151515151515151515150505050505051515151515151515151515151515151515151515151515150505151515151515151505000000000
+//0000007f00007f0000000000000000000000000000000000000000000000000000000000000000000000007f7f7f0000000000000000000000000000000000000000000000000000000000007f7f00000000000000000000000000000000000000000000000000000000000000000000000000000000006e00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000051535353535353535353535353535353535353535353535353535353535353535353535353535353535353535353535353535353535353535353535100000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008d00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007e747e7400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005800007f000000007f0000000000007f7f007f007f7f7f007f000000007f00000000000000000000000000000000000000000000000000000000005400000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008c006b0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005753535b000000000000000000000000000000000000005d000000000000000000000000000000000000000000000000006e6d58000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005400000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000000000000000000000006b00006e00006b000000000000007e000000007e000000000000000000000000008c000000000085890000000000000000000000000000000000000000000000006e000000000000006b000000000000000000000000000000000000007f0000000000000000000000000000000000006e5c00000000000000000000000000000000000000000000000000555158000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005400000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000000000000000000000000000000000000000000000000000858181818181890000000000000000000000008c0000000000868a0000000000000000000000000000000000000000000000000000005559000000000000006666660000000000000000000000000000006666000000000000000000000000000000005c00000000000000000000000000000000000000000000000000565258000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005400000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000000000000000000000000000000000000000000000000000848080808080880000006969690000000000008e00008d00007f7f000000000000000000000000000000000000000000000000000000545800000000000000000000007e007e00000000000000000000000000000066660000000000000000000000005c00000000000000000000000000696969000000000000000000000058000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005400000000000000000000000000000000000000000000000000000000
+//0000000000000000000000000000000000000000000000000000000000000000000000000000000000848080808080880000000000000000000000000000008c00000000000000008589000000000000000000000000000000006869696a0054580000000000000000000000555159000000000000000000000000000000000000000000006b00000000a1005c00000000000000000000000000000000000000000000640000000058000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005400000000000000000000000000000000000000000000000000000000
+//000000000000000000000000000000000000000000000000000000000000000000000000006e000000848080808080880000000000000000000000000000008c0000000000000000868a0000000000000000000000000000000000000000005458000000000000000000000054505800000000000000000000000000000000000000000000000000000000005c7e000000000000006e00000000000000000000000057535b0000005800006e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005400000000000000000000000000000000000000000000000000000000
+//000000000000000000000000000000000000000000000000000000000000000000000000000000000084808080808088000000000000000000006e000000008c000000000000000000000000006b000000000000000000000000000000000054580000000000000000000000545058000000647e000000000000000000000000000000000000000000000000545151515900000057535b0000000000000000000000000000000000580000000000000000000000000000000000000000000000000000006b0000000000000000000000000000000000000000000000000000000000005400000000000000000000000000000000000000000000000000000000
+//0000000000000000000000006e000000000000000000000000000000000000000000000000a10000008480808080808800000000000000008581818181818188000000000000000000000000000000000000000000000000000000000000005458000000000000000000000054505800005551590000000000000000000000000000000000000000000000005450505058000000000000000000000000000000000000000000000058000068696969696900000000000000000000000000000000686969696969000000000000000069696969690000000000696969696900000000005400000000000000000000000000000000000000000000000000000000
+//00000000000000000000000000000000000000007e7e7e00640000000000000000000000000000000084808080808088000000000000000084808080808080880000000000000000000000000000000000006d0000000000000000000000005458000000000000000000000054505800005450580000000000000000000000000000000000000000000000005450505058000000000000000000000000000000640000000000000058000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005400000000000000000000000000000000000000000000000000000000
+//00000000000000000000000000000000000000008581818189000000000000000000000000000000008480808080808800000000000000008480808080808088000000000000000000000000000000000085818100000000000000000000005458000000000000000000000054505800005450580000000000000000000000000000000000000000000000005450505058000000000000000000000000000057535b00000000000058950000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005400000000000000000000000000000000000000000000000000000000
+//00747e747e7400007e007e7e00007e007e60000084808080880000000000000000000000000000000084808080808088000000000000000084808080808080880000000000000000000000000000000000848080007e000064000000000000545800000000000000000000005450580000545058000000000000000000000000000000000000000000000000545050505800000000000000000000000000000000000000000000005896007e7e74747e007d740074740000747e7d0000000000747e00000000740000000000006e0000000000000000000000000000000000000000005400000000000000000000000000000000000000000000000000000000
+//81818181818181818181818181818181818900008480808088000000000000000000000000000000008480808080808800000000000000008480808080808088000000000000000000000000000000000084808051515151590000000000005458000000000000000000000054505800005450580000000000000000000000000000000000000000000000005450505058000000000000000000000000000000000000000000000050518181815151515151515151515181818151515151515151515151515151518181818151515151515151515151818181815151515151515151818000000000000000000000000000000000000000000000000000000000
+//80808080808080808080808080808080808860608480808088606060606060606060606060606060608480808080808860606060606060608480808080808088606060606060606060606060606060606084808050505050586060606060605458606060606060606060606054505860605450586060606060606060606060606060606060606060606060605450505058606060606060606060606060606060606060606060606050505080808080505050505050505080808080505050505050505050505050808080808080805050505050505050808080505050505050508080808000000000000000000000000000000000000000000000000000000000
+//80808080808080808080808080808080808051518080808080515151515151515151515151515151518080808080808051515151515151518080808080808080515151515151515151515151515151515180808050505050505151515151515050515151515151515151515150505051515050505151515151515151515151515151515151515151515151515050505050515151515151515151515151515151515151515151515150505050808080808050505050505050808080808080505050505050505050508080808080808080505050505050808050505050505050808080808000000000000000000000000000000000000000000000000000000000
 //@sfx
-//030000142511c251202510000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+//030000142511c251202510010000000121000000007100111000000014100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 //020000325532d553285532355300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 //020000283531e353000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 //04000024150281502b1503015000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

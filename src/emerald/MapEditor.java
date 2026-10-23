@@ -5,7 +5,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 /**
- * The MAP editor: paint levels with your sprites as tiles, on a 128 x 64 tile map (every 16 x 16
+ * The MAP editor: paint levels with your sprites as tiles, on a 256 x 128 tile map (every 16 x 16
  * tiles is one screen; faint lines show where screens meet).
  *
  *   left mouse    paint the chosen tile          right mouse   pick up the tile under it

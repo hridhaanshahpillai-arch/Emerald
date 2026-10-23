@@ -17,7 +17,7 @@ import java.util.List;
  *   //@flags
  *   //0103000...        8 on/off flags for each of the 256 sprites, 2 hex digits each ("solid", "spikes"...)
  *   //@map
- *   //00010203...       a row of the 128 x 64 map per line, 2 hex digits (a sprite number) per tile
+ *   //00010203...       a row of the 256 x 128 map per line, 2 hex digits (a sprite number) per tile
  *   //@sfx
  *   //10000000...       a sound per line (see Sound.Sfx), "--" for an empty one
  *   //@music
@@ -30,8 +30,8 @@ final class Cart {
 
     static final String SPRITES = "//@sprites", FLAGS = "//@flags", MAP = "//@map", SFX = "//@sfx", MUSIC = "//@music";
     static final int SHEET = 128;
-    /** The map: 128 x 64 tiles, each a sprite number (0 = empty). Every 16 x 16 tiles is one screen. */
-    static final int MAP_WIDTH = 128, MAP_HEIGHT = 64;
+    /** The map: 256 x 128 tiles, each a sprite number (0 = empty). Every 16 x 16 tiles is one screen. */
+    static final int MAP_WIDTH = 256, MAP_HEIGHT = 128;
 
     String code = "";
     final byte[] sheet = new byte[SHEET * SHEET];
